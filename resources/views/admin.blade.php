@@ -126,6 +126,91 @@
             margin-top: 0.75rem;
             color: #6b7280;
         }
+        .filter-panel {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.06);
+            margin-bottom: 2rem;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+        .filter-grid label {
+            display: block;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 0.5rem;
+        }
+        .filter-grid input,
+        .filter-grid select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        .filter-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .filter-actions button,
+        .filter-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+        }
+        .filter-actions button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .filter-actions a {
+            background: #e2e8f0;
+            color: #0f172a;
+            text-decoration: none;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 1rem;
+        }
+        @media (max-width: 920px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .nav {
+                width: 100%;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-actions {
+                justify-content: stretch;
+            }
+            .filter-actions button,
+            .filter-actions a {
+                width: 100%;
+            }
+        }
         .section {
             margin-bottom: 2rem;
         }
@@ -159,6 +244,29 @@
         .table tbody tr:last-child td {
             border-bottom: none;
         }
+        .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        .clickable-row:hover {
+            background: #f8fafc;
+        }
+        .clickable-row:active {
+            transform: translateY(1px);
+        }
+        .clickable-row td {
+            position: relative;
+        }
+        .clickable-row td::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .table tbody tr td > * {
+            position: relative;
+            z-index: 1;
+        }
         .status {
             display: inline-flex;
             padding: 0.35rem 0.75rem;
@@ -169,6 +277,32 @@
         .status.open { background: #dcfce7; color: #166534; }
         .status.pending { background: #fef3c7; color: #92400e; }
         .status.completed { background: #dbeafe; color: #1d4ed8; }
+        .status-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .status-form select {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            background: #f8fafc;
+            color: #0f172a;
+            padding: 0.65rem 0.8rem;
+            min-width: 10rem;
+        }
+        .status-form button {
+            border: none;
+            border-radius: 0.75rem;
+            background: #2563eb;
+            color: white;
+            padding: 0.65rem 1rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .status-form button:hover {
+            background: #1d4ed8;
+        }
         @media (max-width: 920px) {
             .layout {
                 grid-template-columns: 1fr;
@@ -197,10 +331,8 @@
             </div>
             <nav class="nav">
                 <a href="/admin" class="active">Dashboard</a>
-                <a href="#users">Users</a>
-                <a href="#orders">Work Orders</a>
+                <a href="/admin/orders">Work Orders</a>
                 <a href="#reports">Reports</a>
-                <a href="#settings">Settings</a>
             </nav>
         </aside>
         <main class="content">
@@ -212,73 +344,34 @@
                 <div class="badge">Online</div>
             </div>
 
+            @if(session('status'))
+                <div style="margin-bottom:1.5rem; padding:1rem 1.25rem; background:#dcfce7; border:1px solid #bef264; color:#166534; border-radius:0.75rem;">
+                    {{ session('status') }}
+                </div>
+            @endif
             <section class="grid-cards">
                 <article class="card">
-                    <h2>Open Work Orders</h2>
-                    <div class="value">24</div>
-                    <small>Active work orders requiring attention</small>
+                    <h2>Total Work Orders</h2>
+                    <div class="value">{{ $workOrders->count() }}</div>
+                    <small>Jumlah semua work order</small>
                 </article>
                 <article class="card">
-                    <h2>Technicians</h2>
-                    <div class="value">12</div>
-                    <small>Team members currently assigned</small>
+                    <h2>Pending</h2>
+                    <div class="value">{{ $workOrders->where('status', 'Pending')->count() }}</div>
+                    <small>Work order dengan status Pending</small>
                 </article>
                 <article class="card">
-                    <h2>Pending Approvals</h2>
-                    <div class="value">8</div>
-                    <small>Work orders waiting for approval</small>
+                    <h2>On Progress</h2>
+                    <div class="value">{{ $workOrders->where('status', 'On Progress')->count() }}</div>
+                    <small>Work order yang sedang dikerjakan</small>
                 </article>
                 <article class="card">
-                    <h2>Monthly Completion</h2>
-                    <div class="value">92%</div>
-                    <small>Completion rate for this month</small>
+                    <h2>Completed</h2>
+                    <div class="value">{{ $workOrders->where('status', 'Completed')->count() }}</div>
+                    <small>Work order yang selesai</small>
                 </article>
             </section>
 
-            <section class="section" id="orders">
-                <h2>Recent Work Orders</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Assigned To</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#1024</td>
-                            <td>Acme Co.</td>
-                            <td>Rina</td>
-                            <td>2026-05-24</td>
-                            <td><span class="status open">Open</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1023</td>
-                            <td>Evergreen</td>
-                            <td>Jasper</td>
-                            <td>2026-05-22</td>
-                            <td><span class="status pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1022</td>
-                            <td>Nova Interiors</td>
-                            <td>Mira</td>
-                            <td>2026-05-20</td>
-                            <td><span class="status completed">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>#1021</td>
-                            <td>Solaris</td>
-                            <td>Leo</td>
-                            <td>2026-05-19</td>
-                            <td><span class="status open">Open</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
 
             <section class="section" id="users">
                 <h2>Team Activity</h2>
@@ -301,5 +394,25 @@
             </footer>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.clickable-row').forEach(function (row) {
+                row.addEventListener('click', function () {
+                    var href = row.getAttribute('data-href');
+                    if (href) {
+                        window.location.href = href;
+                    }
+                });
+                row.addEventListener('keypress', function (event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        var href = row.getAttribute('data-href');
+                        if (href) {
+                            window.location.href = href;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

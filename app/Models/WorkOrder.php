@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
+class WorkOrder extends Model
+{
+    protected $table = 'work_order';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'department',
+        'issue_type',
+        'description',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // Set created_at if not already set
+            if (!$model->created_at) {
+                $model->created_at = Carbon::now();
+            }
+
+            if (!$model->wo_number) {
+                $now = Carbon::parse($model->created_at);
+                $monthYear = $now->format('Ym');
+                $startOfMonth = $now->copy()->startOfMonth();
+                $endOfMonth = $now->copy()->endOfMonth();
+
+                // Count work orders created in current month
+                $count = static::whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                    ->count();
+
+                // Generate wo_number: YYYYMM followed by sequence (001, 002, etc.)
+                $sequence = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+                $model->wo_number = $monthYear . $sequence;
+            }
+        });
+    }
+}
