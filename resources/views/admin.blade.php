@@ -373,22 +373,6 @@
             </section>
 
 
-            <section class="section" id="users">
-                <h2>Team Activity</h2>
-                <div class="grid-cards">
-                    <article class="card">
-                        <h2>Recent Logins</h2>
-                        <div class="value">6</div>
-                        <small>Users signed in over the last 24 hours</small>
-                    </article>
-                    <article class="card">
-                        <h2>New Users</h2>
-                        <div class="value">3</div>
-                        <small>Accounts created this week</small>
-                    </article>
-                </div>
-            </section>
-
             <footer style="color:#6b7280; font-size:0.95rem; padding-top:1rem; border-top:1px solid #e5e7eb;">
                 Work Order Admin • {{ date('Y') }}
             </footer>

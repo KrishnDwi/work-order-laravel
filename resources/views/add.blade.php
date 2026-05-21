@@ -212,7 +212,7 @@
 <body>
     <nav>
         <div class="container">
-            <div class="brand">WorkOrder System</div>
+            <div class="brand">Harris Hotel Seminyak</div>
             <ul class="nav-links">
                 <li><a href="/">Dashboard</a></li>
                 <li><a href="/add" class="active">Buat Work Order</a></li>
