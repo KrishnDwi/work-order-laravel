@@ -124,7 +124,11 @@ Route::post('/add', function (Request $request) {
         'description' => 'nullable|string',
     ]);
 
-    WorkOrder::create($data);
+    $workOrder = WorkOrder::create($data);
 
-    return redirect('/')->with('status', 'Work order baru berhasil disimpan.');
+    $whatsappNumber = env('ADMIN_WHATSAPP_NUMBER', '62812345678');
+    $message = "Halo Admin, saya telah membuat work order baru:\n\nNomor WO: {$workOrder->wo_number}\nDepartemen: {$workOrder->department}\nJenis Masalah: {$workOrder->issue_type}\nDeskripsi: {$workOrder->description}\n\nSilakan lihat detail di dashboard. Terima kasih!";
+    $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode($message);
+
+    return redirect($whatsappUrl);
 });
