@@ -284,6 +284,10 @@
                             <option value="OTHER" {{ old('issue_type') == 'OTHER' ? 'selected' : '' }}>OTHER</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="location">Lokasi</label>
+                        <input id="location" name="location" type="text" placeholder="Contoh: Ruang 101, Lantai 3" value="{{ old('location') }}">
+                    </div>
                     <div class="grid-full">
                         <label for="description">Deskripsi Work Order</label>
                         <textarea id="description" name="description" placeholder="Jelaskan kebutuhan atau masalah pekerjaan...">{{ old('description') }}</textarea>

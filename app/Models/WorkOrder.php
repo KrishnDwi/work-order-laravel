@@ -14,6 +14,7 @@ class WorkOrder extends Model
         'department',
         'issue_type',
         'description',
+        'location',
     ];
 
     protected static function boot()

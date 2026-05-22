@@ -84,6 +84,10 @@
                         <p>{{ $order->issue_type }}</p>
                     </div>
                     <div>
+                        <strong>Lokasi</strong>
+                        <p>{{ $order->location ?: 'Tidak ada lokasi' }}</p>
+                    </div>
+                    <div>
                         <strong>Status saat ini</strong>
                         <p><span class="status {{ strtolower(str_replace(' ', '-', $order->status)) }}">{{ $order->status }}</span></p>
                     </div>

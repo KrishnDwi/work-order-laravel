@@ -140,6 +140,7 @@
                                 <th>Nomor WO</th>
                                 <th>Departemen</th>
                                 <th>Jenis Masalah</th>
+                                <th>Lokasi</th>
                                 <th>Status</th>
                                 <th>Dibuat</th>
                             </tr>
@@ -150,6 +151,7 @@
                                     <td><strong>{{ $order->wo_number }}</strong></td>
                                     <td>{{ $order->department }}</td>
                                     <td>{{ $order->issue_type }}</td>
+                                    <td>{{ $order->location ?? '-' }}</td>
                                     <td>
                                         @if($order->status === 'Pending')
                                             <span class="status pending">{{ $order->status }}</span>

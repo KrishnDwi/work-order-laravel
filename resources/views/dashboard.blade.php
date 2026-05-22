@@ -390,16 +390,18 @@
                             <th>Nomor WO</th>
                             <th>Departemen</th>
                             <th>Jenis Masalah</th>
+                            <th>Lokasi</th>
                             <th>Status</th>
                             <th>Tanggal Dibuat</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($workOrders as $order)
-                            <tr class="clickable-row" data-wo-number="{{ $order->wo_number }}" data-department="{{ $order->department }}" data-issue-type="{{ $order->issue_type }}" data-status="{{ $order->status }}" data-created-at="{{ date('d/m/Y H:i', strtotime($order->created_at)) }}" data-description="{{ $order->description ?? 'Tidak ada deskripsi.' }}">
+                            <tr class="clickable-row" data-wo-number="{{ $order->wo_number }}" data-department="{{ $order->department }}" data-issue-type="{{ $order->issue_type }}" data-location="{{ $order->location ?? 'Tidak ada lokasi' }}" data-status="{{ $order->status }}" data-created-at="{{ date('d/m/Y H:i', strtotime($order->created_at)) }}" data-description="{{ $order->description ?? 'Tidak ada deskripsi.' }}">
                                 <td><strong>{{ $order->wo_number }}</strong></td>
                                 <td>{{ $order->department }}</td>
                                 <td>{{ $order->issue_type }}</td>
+                                <td>{{ $order->location ?? '-' }}</td>
                                 <td>
                                     @if($order->status == 'Pending')
                                         <span class="tag pending">{{ $order->status }}</span>
@@ -434,6 +436,7 @@
                 <p><strong>Nomor WO</strong> <span id="modal-wo-number"></span></p>
                 <p><strong>Departemen</strong> <span id="modal-department"></span></p>
                 <p><strong>Jenis Masalah</strong> <span id="modal-issue-type"></span></p>
+                <p><strong>Lokasi</strong> <span id="modal-location"></span></p>
                 <p><strong>Status</strong> <span id="modal-status"></span></p>
                 <p><strong>Tanggal Dibuat</strong> <span id="modal-created-at"></span></p>
                 <p><strong>Deskripsi</strong></p>
@@ -452,6 +455,7 @@
                 woNumber: document.getElementById('modal-wo-number'),
                 department: document.getElementById('modal-department'),
                 issueType: document.getElementById('modal-issue-type'),
+                location: document.getElementById('modal-location'),
                 status: document.getElementById('modal-status'),
                 createdAt: document.getElementById('modal-created-at'),
                 description: document.getElementById('modal-description'),
@@ -475,6 +479,7 @@
                     modalFields.woNumber.textContent = row.dataset.woNumber;
                     modalFields.department.textContent = row.dataset.department;
                     modalFields.issueType.textContent = row.dataset.issueType;
+                    modalFields.location.textContent = row.dataset.location;
                     modalFields.status.textContent = row.dataset.status;
                     modalFields.createdAt.textContent = row.dataset.createdAt;
                     modalFields.description.textContent = row.dataset.description;

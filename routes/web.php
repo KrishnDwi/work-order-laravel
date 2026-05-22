@@ -121,13 +121,14 @@ Route::post('/add', function (Request $request) {
     $data = $request->validate([
         'department' => 'required|in:FB Kitchen,Housekeeping,Front Office,DT,FB Service,P&C,Security,Sales,Acct,A&G',
         'issue_type' => 'required|in:ELECTRICAL,MECHANICAL,PLUMBING,HVAC,BUILDING,FURNITURE,AV,SAFETY,OTHER',
+        'location' => 'nullable|string|max:255',
         'description' => 'nullable|string',
     ]);
 
     $workOrder = WorkOrder::create($data);
 
     $whatsappNumber = env('ADMIN_WHATSAPP_NUMBER', '62812345678');
-    $message = "Halo Admin, saya telah membuat work order baru:\n\nNomor WO: {$workOrder->wo_number}\nDepartemen: {$workOrder->department}\nJenis Masalah: {$workOrder->issue_type}\nDeskripsi: {$workOrder->description}\n\nSilakan lihat detail di dashboard. Terima kasih!";
+    $message = "Halo Admin, saya telah membuat work order baru:\n\nNomor WO: {$workOrder->wo_number}\nDepartemen: {$workOrder->department}\nLokasi: {$workOrder->location}\nJenis Masalah: {$workOrder->issue_type}\nDeskripsi: {$workOrder->description}\n\nSilakan lihat detail di dashboard. Terima kasih!";
     $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode($message);
 
     return redirect($whatsappUrl);
