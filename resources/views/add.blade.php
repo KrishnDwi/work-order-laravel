@@ -244,13 +244,7 @@
                 </div>
             @endif
 
-            @if(session('status'))
-                <div class="alert">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            <form action="/add" method="POST">
+            <form action="/add" method="POST" target="_blank" onsubmit="setTimeout(function(){ window.location.href = '/'; }, 300);">
                 @csrf
                 <div class="grid">
                     <div>
