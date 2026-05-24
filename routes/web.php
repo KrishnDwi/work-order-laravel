@@ -3,6 +3,7 @@
 use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function (Request $request) {
     $query = WorkOrder::orderBy('created_at', 'desc');
@@ -45,110 +46,12 @@ Route::get('/', function (Request $request) {
     ]);
 });
 
-Route::get('/admin', function () {
-    $workOrders = WorkOrder::all();
-
-    return view('admin', [
-        'workOrders' => $workOrders,
-    ]);
-});
-
-Route::get('/admin/orders', function (Request $request) {
-    $query = WorkOrder::orderBy('created_at', 'desc');
-
-    if ($request->filled('department')) {
-        $query->where('department', $request->input('department'));
-    }
-
-    if ($request->filled('issue_type')) {
-        $query->where('issue_type', $request->input('issue_type'));
-    }
-
-    if ($request->filled('status')) {
-        $query->where('status', $request->input('status'));
-    }
-
-    if ($request->filled('from_date')) {
-        $query->whereDate('created_at', '>=', $request->input('from_date'));
-    }
-
-    if ($request->filled('to_date')) {
-        $query->whereDate('created_at', '<=', $request->input('to_date'));
-    }
-
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function ($sub) use ($search) {
-            $sub->where('wo_number', 'like', "%{$search}%")
-                ->orWhere('department', 'like', "%{$search}%")
-                ->orWhere('issue_type', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
-        });
-    }
-
-    $workOrders = $query->get();
-
-    return view('admin-orders', [
-        'workOrders' => $workOrders,
-        'filters' => $request->only(['department', 'issue_type', 'status', 'search', 'from_date', 'to_date']),
-    ]);
-});
-
-Route::get('/admin/order/{order}', function (WorkOrder $order) {
-    return view('admin-detail', ['order' => $order]);
-});
-
-Route::post('/admin/order/{order}/update-status', function (Request $request, WorkOrder $order) {
-    $data = $request->validate([
-        'status' => 'required|in:Pending,On Progress,Completed',
-    ]);
-
-    $order->status = $data['status'];
-    $order->save();
-
-    return redirect("/admin/order/{$order->id}")->with('status', 'Status work order berhasil diperbarui.');
-});
-
-Route::get('/admin/report', function (Request $request) {
-    // Ambil seluruh data atau difilter berdasarkan tanggal
-    $query = WorkOrder::orderBy('created_at', 'desc');
-
-    if ($request->filled('from_date')) {
-        $query->whereDate('created_at', '>=', $request->input('from_date'));
-    }
-
-    if ($request->filled('to_date')) {
-        $query->whereDate('created_at', '<=', $request->input('to_date'));
-    }
-
-    $workOrders = $query->get();
-
-    // Hitung ringkasan status
-    $totalOrders = $workOrders->count();
-    $pendingOrders = $workOrders->where('status', 'Pending')->count();
-    $onProgressOrders = $workOrders->where('status', 'On Progress')->count();
-    $completedOrders = $workOrders->where('status', 'Completed')->count();
-
-    // Kelompokkan data untuk tabel statistik
-    $departmentStats = $workOrders->groupBy('department')->map(function ($items) {
-        return $items->count();
-    })->sortDesc();
-
-    $issueStats = $workOrders->groupBy('issue_type')->map(function ($items) {
-        return $items->count();
-    })->sortDesc();
-
-    return view('admin-report', [
-        'totalOrders' => $totalOrders,
-        'pendingOrders' => $pendingOrders,
-        'onProgressOrders' => $onProgressOrders,
-        'completedOrders' => $completedOrders,
-        'departmentStats' => $departmentStats,
-        'issueStats' => $issueStats,
-        'filters' => $request->only(['from_date', 'to_date']),
-    ]);
-});
-
+Route::get('/admin', [AdminController::class, 'index']);
+Route::get('/admin/orders', [AdminController::class, 'orders']);
+Route::get('/admin/order/{id}', [AdminController::class, 'show']);
+Route::post('/admin/order/{id}/update-status', [AdminController::class, 'updateStatus']);
+Route::get('/admin/report', [AdminController::class, 'report']);
+Route::get('/admin/report/pdf', [AdminController::class, 'downloadPdf']);
 Route::get('/welcome', function () {
     return view('welcome');
 });

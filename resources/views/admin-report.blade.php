@@ -32,7 +32,12 @@
                         </div>
                         <div class="filter-actions">
                             <button type="submit">Filter Data</button>
-                            <a href="/admin/report">Reset</a>
+                            <a href="/admin/report" class="clear" style="background: #e2e8f0; color: #0f172a;">Reset</a>
+                            
+                            <a href="{{ url('/admin/report/pdf') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
+                            style="background: #10b981; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700; margin-left: auto;">
+                            📥 Download PDF
+                            </a>
                         </div>
                     </div>
                 </form>
