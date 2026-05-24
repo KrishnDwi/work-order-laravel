@@ -109,6 +109,46 @@ Route::post('/admin/order/{order}/update-status', function (Request $request, Wo
     return redirect("/admin/order/{$order->id}")->with('status', 'Status work order berhasil diperbarui.');
 });
 
+Route::get('/admin/report', function (Request $request) {
+    // Ambil seluruh data atau difilter berdasarkan tanggal
+    $query = WorkOrder::orderBy('created_at', 'desc');
+
+    if ($request->filled('from_date')) {
+        $query->whereDate('created_at', '>=', $request->input('from_date'));
+    }
+
+    if ($request->filled('to_date')) {
+        $query->whereDate('created_at', '<=', $request->input('to_date'));
+    }
+
+    $workOrders = $query->get();
+
+    // Hitung ringkasan status
+    $totalOrders = $workOrders->count();
+    $pendingOrders = $workOrders->where('status', 'Pending')->count();
+    $onProgressOrders = $workOrders->where('status', 'On Progress')->count();
+    $completedOrders = $workOrders->where('status', 'Completed')->count();
+
+    // Kelompokkan data untuk tabel statistik
+    $departmentStats = $workOrders->groupBy('department')->map(function ($items) {
+        return $items->count();
+    })->sortDesc();
+
+    $issueStats = $workOrders->groupBy('issue_type')->map(function ($items) {
+        return $items->count();
+    })->sortDesc();
+
+    return view('admin-report', [
+        'totalOrders' => $totalOrders,
+        'pendingOrders' => $pendingOrders,
+        'onProgressOrders' => $onProgressOrders,
+        'completedOrders' => $completedOrders,
+        'departmentStats' => $departmentStats,
+        'issueStats' => $issueStats,
+        'filters' => $request->only(['from_date', 'to_date']),
+    ]);
+});
+
 Route::get('/welcome', function () {
     return view('welcome');
 });

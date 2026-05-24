@@ -332,7 +332,7 @@
             <nav class="nav">
                 <a href="/admin" class="active">Dashboard</a>
                 <a href="/admin/orders">Work Orders</a>
-                <a href="#reports">Reports</a>
+                <a href="/admin/report">Reports</a>
             </nav>
         </aside>
         <main class="content">
