@@ -58,20 +58,7 @@
 </head>
 <body>
     <div class="layout">
-        <aside class="sidebar">
-            <div>
-                <div class="brand">
-                    <span class="brand-mark">W</span>
-                    <span>WorkOrder Admin</span>
-                </div>
-                <p style="margin-top:1rem; color:#9ca3af; line-height:1.6;">Manage all work orders and quickly find details from the admin panel.</p>
-            </div>
-            <nav class="nav">
-                <a href="/admin">Dashboard</a>
-                <a href="/admin/orders" class="active">Work Orders</a>
-                <a href="#reports">Reports</a>
-            </nav>
-        </aside>
+        @include('partials.sidebar')
         <main class="content">
             <div class="topbar">
                 <div>

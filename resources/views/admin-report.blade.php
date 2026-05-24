@@ -18,15 +18,57 @@
         .wrapper { display: flex; min-height: 100vh; }
         
         /* Sidebar Navigasi Kiri */
-        aside {
-            width: 260px; background: #111827; color: #f9fafb; padding: 2rem 1.5rem;
-            position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column;
-            gap: 2rem; box-shadow: 4px 0 12px rgba(0,0,0,0.05); z-index: 100;
+        .sidebar {
+            width: 280px; 
+            background: #111827; 
+            color: #f9fafb; 
+            padding: 2rem 1.5rem;
+            position: fixed; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            display: flex; 
+            flex-direction: column;
+            gap: 2rem; 
+            box-shadow: 4px 0 12px rgba(0,0,0,0.05); 
+            z-index: 100;
         }
-        aside .brand { font-weight: 700; font-size: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; line-height: 1.4; }
-        aside .nav-links { display: flex; flex-direction: column; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
-        aside .nav-links a { color: #d1d5db; padding: 0.75rem 1rem; border-radius: 0.5rem; display: block; transition: all 0.2s ease; }
-        aside .nav-links a:hover, aside .nav-links a.active { color: #f9fafb; background: #1f2937; font-weight: 600; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .brand-mark {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 1rem;
+        }
+        .nav {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .nav a {
+            display: block;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            color: #d1d5db;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .nav a:hover,
+        .nav a.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f9fafb;
+}
+
+/* Sesuaikan margin area konten karena lebar sidebar berubah dari 260px menjadi 280px */
+.main-content { flex: 1; margin-left: 280px; padding: 2rem 2.5rem; max-width: calc(100% - 280px); }
         
         /* Area Konten Utama (Kanan) */
         .main-content { flex: 1; margin-left: 260px; padding: 2rem 2.5rem; max-width: calc(100% - 260px); }
@@ -77,10 +119,10 @@
         
         @media (max-width: 768px) {
             .wrapper { flex-direction: column; }
-            aside { width: 100%; position: static; padding: 1rem 1.5rem; gap: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-            aside .brand { padding-bottom: 0.5rem; border-bottom: none; }
-            aside .nav-links { flex-direction: row; flex-wrap: wrap; gap: 0.5rem; }
-            aside .nav-links a { padding: 0.5rem 0.75rem; }
+            .sidebar { width: 100%; position: static; padding: 1rem 1.5rem; gap: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+            .sidebar > div > p { display: none; /* Menyembunyikan deskripsi panjang di layar kecil */ }
+            .nav { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+            .nav a { padding: 0.5rem 0.75rem; }
             .main-content { margin-left: 0; padding: 1.5rem 1rem; max-width: 100%; }
             .filter-bar { flex-direction: column; align-items: stretch; }
             .filter-bar .group { width: 100%; }
