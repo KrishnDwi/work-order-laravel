@@ -16,7 +16,6 @@
                     <h1>Work Orders</h1>
                     <p>Filter and browse all work orders from the admin panel.</p>
                 </div>
-                <div class="badge">Online</div>
             </div>
 
             <section class="filter-panel">
@@ -108,11 +107,12 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="pagination">
+                        {{ $workOrders->appends(request()->query())->links() }}
+                    </div>
                 </div>
             </section>
-            <footer style="color:#6b7280; font-size:0.95rem; padding-top:1rem; border-top:1px solid #e5e7eb;">
-                Work Order Admin • {{ date('Y') }}
-            </footer>
+            @include('partials.footer')
         </main>
     </div>
     <script>

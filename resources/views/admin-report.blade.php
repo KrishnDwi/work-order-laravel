@@ -36,7 +36,7 @@
                             
                             <a href="{{ url('/admin/report/pdf') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
                             style="background: #10b981; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700; margin-left: auto;">
-                            📥 Download PDF
+                            Download PDF
                             </a>
                         </div>
                     </div>
@@ -123,6 +123,7 @@
                     @endif
                 </div>
             </div>
+            @include('partials.footer')
         </main>
     </div>
 </body>

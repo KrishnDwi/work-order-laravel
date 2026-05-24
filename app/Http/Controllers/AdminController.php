@@ -12,7 +12,14 @@ class AdminController extends Controller
     public function index()
     {
         $workOrders = WorkOrder::all();
-        return view('admin', compact('workOrders'));
+        
+        // Ambil 5 Work Order berstatus 'Pending' yang paling lama belum dikerjakan
+        $urgentOrders = WorkOrder::where('status', 'Pending')
+                                 ->orderBy('created_at', 'asc')
+                                 ->take(5)
+                                 ->get();
+
+        return view('admin', compact('workOrders', 'urgentOrders'));
     }
 
     // 2. Halaman Daftar Semua Work Orders (+ Fitur Filter & Pencarian)
@@ -46,7 +53,7 @@ class AdminController extends Controller
             $query->whereBetween('created_at', [$request->from_date, $request->to_date . ' 23:59:59']);
         }
 
-        $workOrders = $query->orderBy('created_at', 'desc')->get();
+        $workOrders = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('admin-orders', compact('workOrders', 'filters'));
     }

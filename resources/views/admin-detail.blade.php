@@ -62,9 +62,7 @@
                     <button type="submit">Simpan Perubahan</button>
                 </form>
             </div>
-            <footer style="color:#6b7280; font-size:0.95rem; padding-top:1rem; border-top:1px solid #e5e7eb;">
-                Work Order Admin • {{ date('Y') }}
-            </footer>
+            @include('partials.footer')
         </main>
     </div>
 </body>
