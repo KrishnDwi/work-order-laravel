@@ -217,55 +217,69 @@ a { color: inherit; text-decoration: none; }
 
 /* ==========================================
    RESPONSIVE — MOBILE (≤768px)
-   Sidebar collapse jadi icon-only (64px)
+   Sidebar berubah jadi navbar atas
    ========================================== */
 @media (max-width: 768px) {
-    .layout { grid-template-columns: 64px 1fr; }
-
-    .sidebar {
-        padding: 1.5rem 0;
-        align-items: center;
-        gap: 1.5rem;
-        width: 64px;
+    /* Layout: sidebar di atas, konten di bawah */
+    .layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
     }
 
-    /* Sembunyikan teks brand & deskripsi */
-    .brand-text,
+    /* Sidebar jadi navbar horizontal */
+    .sidebar {
+        position: sticky;
+        top: 0;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem 1.25rem;
+        gap: 0;
+        z-index: 100;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Sembunyikan deskripsi */
     .sidebar-desc { display: none; }
 
-    /* Brand hanya tampilkan icon */
-    .brand { justify-content: center; padding: 0; }
+    /* Brand di kiri */
+    .brand { font-size: 1rem; gap: 0.5rem; }
+    .brand-mark { width: 1.75rem; height: 1.75rem; font-size: 0.85rem; }
 
-    /* Nav link jadi icon-only, tengah */
-    .nav a {
-        justify-content: center;
-        padding: 0.85rem;
-        border-radius: 0.75rem;
-        width: 44px;
-        height: 44px;
+    /* Nav jadi baris horizontal di kanan — icon only */
+    .nav {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25rem;
     }
-    .nav-label { display: none; }
-    .nav-icon { font-size: 1.25rem; }
-
-    /* Konten utama */
+    .nav a {
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        gap: 0;
+    }
+    
+    /* Konten full width */
     .content { padding: 1.25rem 1rem; }
     .topbar { flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-bottom: 1.25rem; }
     .topbar h1 { font-size: 1.4rem; }
     .topbar > div:last-child { display: flex; flex-wrap: wrap; gap: 0.5rem; width: 100%; }
     .topbar > div:last-child a { flex: 1 1 auto; text-align: center; justify-content: center; font-size: 0.875rem; padding: 0.6rem 0.75rem; }
 
-    /* Grid menjadi 2 kolom */
+    /* Grid */
     .grid-cards { grid-template-columns: repeat(2, 1fr); }
     .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     .filter-grid { grid-template-columns: 1fr; }
     .details-grid { grid-template-columns: 1fr; }
     .data-grid { grid-template-columns: 1fr; }
 
-    /* Filter actions full width */
+    /* Filter actions */
     .filter-actions { flex-direction: column; }
     .filter-actions button, .filter-actions a { width: 100%; }
 
-    /* Status form stack */
+    /* Status form */
     .status-form { flex-direction: column; align-items: stretch; }
     .status-form select { min-width: unset; }
     .status-form button { width: 100%; }
@@ -278,10 +292,9 @@ a { color: inherit; text-decoration: none; }
    RESPONSIVE — SMALL MOBILE (≤480px)
    ========================================== */
 @media (max-width: 480px) {
-    .layout { grid-template-columns: 56px 1fr; }
-    .sidebar { width: 56px; }
-    .nav a { width: 40px; height: 40px; padding: 0.7rem; }
-    .content { padding: 1rem 0.75rem; }
+    .brand-text { display: none; }
+    .nav a { padding: 0.5rem; }
+    .content { padding: 1rem 0.85rem; }
     .grid-cards { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
     .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
     .metric-card { padding: 1rem; }

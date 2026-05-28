@@ -75,11 +75,11 @@
                 <div class="topbar-actions">
                     <a href="/admin/report/pdf?from_date={{ date('Y-m-d') }}&to_date={{ date('Y-m-d') }}"
                        style="background: #10b981; color: white;">
-                       📥 Download Laporan Hari Ini
+                       Download Laporan Hari Ini
                     </a>
                     <a href="/"
                        style="background: #2563eb; color: white;">
-                       ➕ Buat WO Baru
+                       Buat WO Baru
                     </a>
                 </div>
             </div>
@@ -113,7 +113,7 @@
 
             @if($urgentOrders->count() > 0)
             <section class="card" style="border-left: 4px solid #ef4444; background: #fef2f2;">
-                <h2 style="color: #b91c1c; margin-bottom: 1rem;">🔴 Work Order Baru</h2>
+                <h2 style="color: #b91c1c; margin-bottom: 1rem;">Work Order Baru</h2>
                 <div class="table-wrapper" style="margin-bottom: 0; box-shadow: none;">
                     <table class="table urgent-table" style="background: transparent; box-shadow: none;">
                         <thead>
