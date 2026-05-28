@@ -6,6 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Work Orders | Admin</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <style>
+        /* Mobile: tabel tampil sebagai card stack */
+        @media (max-width: 768px) {
+            .table thead { display: none; }
+            .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+            .table tr {
+                background: white;
+                border-radius: 0.75rem;
+                margin-bottom: 0.75rem;
+                padding: 1rem;
+                box-shadow: 0 2px 8px rgba(15,23,42,0.07);
+                border: 1px solid #e5e7eb;
+            }
+            .table td {
+                padding: 0.3rem 0;
+                border: none;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: #6b7280;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                min-width: 80px;
+                flex-shrink: 0;
+                padding-top: 2px;
+            }
+            .table-wrapper { box-shadow: none; background: transparent; }
+            .table { box-shadow: none; background: transparent; }
+            .clickable-row { cursor: pointer; }
+            .clickable-row:hover { background: #f8fafc !important; }
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -68,8 +105,8 @@
                 </form>
             </section>
 
-            <section class="section">
-                <h2>Daftar Work Orders</h2>
+            <section>
+                <h2 style="margin: 0 0 1rem; font-size: 1.125rem; font-weight: 700;">Daftar Work Orders</h2>
                 <div class="table-wrapper">
                     <table class="table">
                         <thead>
@@ -84,12 +121,12 @@
                         </thead>
                         <tbody>
                             @forelse($workOrders as $order)
-                                <tr class="clickable-row" data-href="/admin/order/{{ $order->id }}">
-                                    <td><strong>{{ $order->wo_number }}</strong></td>
-                                    <td>{{ $order->department }}</td>
-                                    <td>{{ $order->issue_type }}</td>
-                                    <td>{{ $order->location ?? '-' }}</td>
-                                    <td>
+                                <tr class="clickable-row" data-href="/admin/order/{{ $order->id }}" onclick="window.location.href='/admin/order/{{ $order->id }}'">
+                                    <td data-label="Nomor WO"><strong>{{ $order->wo_number }}</strong></td>
+                                    <td data-label="Departemen">{{ $order->department }}</td>
+                                    <td data-label="Jenis">{{ $order->issue_type }}</td>
+                                    <td data-label="Lokasi">{{ $order->location ?? '-' }}</td>
+                                    <td data-label="Status">
                                         @if($order->status === 'Pending')
                                             <span class="status pending">{{ $order->status }}</span>
                                         @elseif($order->status === 'On Progress')
@@ -98,11 +135,11 @@
                                             <span class="status completed">{{ $order->status }}</span>
                                         @endif
                                     </td>
-                                    <td>{{ date('d/m/Y H:i', strtotime($order->created_at)) }}</td>
+                                    <td data-label="Dibuat">{{ date('d/m/Y H:i', strtotime($order->created_at)) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" style="text-align:center; padding:2rem; color:#6b7280;">Tidak ada work order untuk filter ini.</td>
+                                    <td colspan="6" style="text-align:center; padding:2rem; color:#6b7280;">Tidak ada work order untuk filter ini.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -112,28 +149,9 @@
                     </div>
                 </div>
             </section>
+
             @include('partials.footer')
         </main>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.clickable-row').forEach(function (row) {
-                row.addEventListener('click', function () {
-                    var href = row.getAttribute('data-href');
-                    if (href) {
-                        window.location.href = href;
-                    }
-                });
-                row.addEventListener('keypress', function (event) {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        var href = row.getAttribute('data-href');
-                        if (href) {
-                            window.location.href = href;
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

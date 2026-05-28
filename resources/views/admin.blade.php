@@ -6,6 +6,62 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Admin Panel | Work Order</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <style>
+        /* Tombol topbar responsive */
+        .topbar-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .topbar-actions a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.65rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* Mobile: tabel urgent jadi card stack */
+        @media (max-width: 768px) {
+            .topbar-actions { width: 100%; }
+            .topbar-actions a { flex: 1 1 auto; justify-content: center; font-size: 0.85rem; }
+
+            .urgent-table thead { display: none; }
+            .urgent-table,
+            .urgent-table tbody,
+            .urgent-table tr,
+            .urgent-table td { display: block; width: 100%; }
+            .urgent-table tr {
+                background: #fff5f5;
+                border-radius: 0.75rem;
+                margin-bottom: 0.75rem;
+                padding: 1rem;
+                border: 1px solid #fecaca;
+            }
+            .urgent-table td {
+                padding: 0.3rem 0;
+                border: none;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .urgent-table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: #9ca3af;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                min-width: 90px;
+                flex-shrink: 0;
+                padding-top: 2px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
@@ -16,23 +72,20 @@
                     <h1>Admin Dashboard</h1>
                     <p>Overview of current operations and recent activity.</p>
                 </div>
-                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                    <a href="/admin/report/pdf?from_date={{ date('Y-m-d') }}&to_date={{ date('Y-m-d') }}" 
-                       style="background: #10b981; color: white; padding: 0.65rem 1rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
-                       Download Laporan Hari Ini
+                <div class="topbar-actions">
+                    <a href="/admin/report/pdf?from_date={{ date('Y-m-d') }}&to_date={{ date('Y-m-d') }}"
+                       style="background: #10b981; color: white;">
+                       📥 Download Laporan Hari Ini
                     </a>
-                    
-                    <a href="/" 
-                       style="background: #2563eb; color: white; padding: 0.65rem 1rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                    <a href="/"
+                       style="background: #2563eb; color: white;">
                        ➕ Buat WO Baru
                     </a>
                 </div>
             </div>
 
             @if(session('status'))
-                <div class="message">
-                    {{ session('status') }}
-                </div>
+                <div class="message">{{ session('status') }}</div>
             @endif
 
             <section class="grid-cards">
@@ -60,11 +113,9 @@
 
             @if($urgentOrders->count() > 0)
             <section class="card" style="border-left: 4px solid #ef4444; background: #fef2f2;">
-                <h2 style="color: #b91c1c; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                    Work Order Baru 
-                </h2>
+                <h2 style="color: #b91c1c; margin-bottom: 1rem;">🔴 Work Order Baru</h2>
                 <div class="table-wrapper" style="margin-bottom: 0; box-shadow: none;">
-                    <table class="table" style="background: transparent; box-shadow: none;">
+                    <table class="table urgent-table" style="background: transparent; box-shadow: none;">
                         <thead>
                             <tr>
                                 <th>Nomor WO</th>
@@ -77,15 +128,15 @@
                         <tbody>
                             @foreach($urgentOrders as $urgent)
                             <tr>
-                                <td><strong>{{ $urgent->wo_number }}</strong></td>
-                                <td>{{ $urgent->department }}</td>
-                                <td>{{ $urgent->issue_type }}</td>
-                                <td style="color: #ef4444; font-weight: 600;">
+                                <td data-label="Nomor WO"><strong>{{ $urgent->wo_number }}</strong></td>
+                                <td data-label="Departemen">{{ $urgent->department }}</td>
+                                <td data-label="Jenis">{{ $urgent->issue_type }}</td>
+                                <td data-label="Tunggu" style="color: #ef4444; font-weight: 600;">
                                     {{ \Carbon\Carbon::parse($urgent->created_at)->diffForHumans() }}
                                 </td>
-                                <td>
+                                <td data-label="Aksi">
                                     <a href="/admin/order/{{ $urgent->id }}" style="color: #2563eb; font-weight: 700; font-size: 0.9rem;">
-                                        Tindak Lanjuti &rarr;
+                                        Tindak Lanjuti →
                                     </a>
                                 </td>
                             </tr>
@@ -99,25 +150,5 @@
             @include('partials.footer')
         </main>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.clickable-row').forEach(function (row) {
-                row.addEventListener('click', function () {
-                    var href = row.getAttribute('data-href');
-                    if (href) {
-                        window.location.href = href;
-                    }
-                });
-                row.addEventListener('keypress', function (event) {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        var href = row.getAttribute('data-href');
-                        if (href) {
-                            window.location.href = href;
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
