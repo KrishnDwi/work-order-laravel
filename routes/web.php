@@ -66,7 +66,13 @@ Route::post('/add', function (Request $request) {
         'issue_type' => 'required|in:ELECTRICAL,MECHANICAL,PLUMBING,HVAC,BUILDING,FURNITURE,AV,SAFETY,OTHER',
         'location' => 'nullable|string|max:255',
         'description' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Maksimal 5MB
     ]);
+
+    // Jika pengguna mengunggah foto, simpan ke folder 'storage/app/public/work_orders'
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('work_orders', 'public');
+    }
 
     $workOrder = WorkOrder::create($data);
 
@@ -74,6 +80,5 @@ Route::post('/add', function (Request $request) {
     $message = "Halo Admin, saya telah membuat work order baru:\n\nNomor WO: {$workOrder->wo_number}\nDepartemen: {$workOrder->department}\nLokasi: {$workOrder->location}\nJenis Masalah: {$workOrder->issue_type}\nDeskripsi: {$workOrder->description}\n\nSilakan lihat detail di dashboard. Terima kasih!";
     $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode($message);
 
-    // Langsung arahkan ke WA. Karena form kita set target="_blank", redirect ini akan terjadi di tab baru.
     return redirect($whatsappUrl);
 });

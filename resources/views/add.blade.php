@@ -244,7 +244,7 @@
                 </div>
             @endif
 
-            <form action="/add" method="POST" target="_blank" onsubmit="setTimeout(function(){ window.location.href = '/'; }, 300);">
+            <form action="/add" method="POST" enctype="multipart/form-data" target="_blank" onsubmit="setTimeout(function(){ window.location.href = '/'; }, 300);">
                 @csrf
                 <div class="grid">
                     <div>
@@ -285,6 +285,11 @@
                     <div class="grid-full">
                         <label for="description">Deskripsi Work Order</label>
                         <textarea id="description" name="description" placeholder="Jelaskan kebutuhan atau masalah pekerjaan...">{{ old('description') }}</textarea>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="image" style="display: block; font-weight: bold; margin-bottom: 0.5rem;">Lampirkan Foto (Opsional)</label>
+                        <input type="file" name="image" id="image" accept="image/*" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem;">
+                        <small style="color: #666;">Batas maksimal 5MB. Format: JPG, JPEG, PNG.</small>
                     </div>
                 </div>
                 <div class="actions">

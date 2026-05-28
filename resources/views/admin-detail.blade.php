@@ -49,6 +49,17 @@
                     <strong>Deskripsi</strong>
                     <p>{{ $order->description ?: 'Tidak ada deskripsi tambahan.' }}</p>
                 </div>
+                @if($order->image)
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
+                    <strong>Lampiran Foto:</strong>
+                    <div style="margin-top: 0.75rem;">
+                        <a href="{{ asset('storage/' . $order->image) }}" target="_blank">
+                            <img src="{{ asset('storage/' . $order->image) }}" alt="Foto Kendala WO" style="max-width: 100%; max-height: 400px; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                        </a>
+                    </div>
+                    <small style="color: #6b7280; display: block; margin-top: 0.5rem;">*Klik pada gambar untuk melihat ukuran penuh</small>
+                </div>
+                @endif
             </div>
             <div class="card">
                 <h2>Ubah Status Work Order</h2>

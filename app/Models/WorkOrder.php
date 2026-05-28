@@ -15,6 +15,7 @@ class WorkOrder extends Model
         'issue_type',
         'description',
         'location',
+        'image',
     ];
 
     protected static function boot()
