@@ -45,20 +45,24 @@
 
             <div class="metric-grid">
                 <div class="metric-card total">
-                    <h3>Total Keseluruhan</h3>
-                    <div class="value">{{ $totalOrders }}</div>
+                    <h3>Total Tiket Masuk</h3>
+                    <p class="value">{{ $totalOrders }}</p>
                 </div>
-                <div class="metric-card pending">
-                    <h3>Status Pending</h3>
-                    <div class="value">{{ $pendingOrders }}</div>
+                <div class="metric-card completed">
+                    <h3>Terselesaikan</h3>
+                    <p class="value">{{ $completedOrders }}</p>
                 </div>
                 <div class="metric-card progress">
                     <h3>Sedang Dikerjakan</h3>
-                    <div class="value">{{ $onProgressOrders }}</div>
+                    <p class="value">{{ $onProgressOrders }}</p>
                 </div>
-                <div class="metric-card completed">
-                    <h3>Selesai</h3>
-                    <div class="value">{{ $completedOrders }}</div>
+                <div class="metric-card pending">
+                    <h3>Belum Ditangani</h3>
+                    <p class="value">{{ $pendingOrders }}</p>
+                </div>
+                <div class="metric-card" style="border-bottom: 4px solid #6366f1; background: #f8fafc;">
+                    <h3 style="color: #4f46e5;">⏱️ Rata-rata Durasi</h3>
+                    <p class="value" style="font-size: 1.8rem; margin-top: 1rem; color: #4f46e5;">{{ $avgResolutionTime }}</p>
                 </div>
             </div>
 

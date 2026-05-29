@@ -99,29 +99,51 @@ class AdminController extends Controller
     // 5. Halaman Analisis Laporan (Web View)
     public function report(Request $request)
     {
-        $filters = $request->only(['from_date', 'to_date']);
-        
-        $query = WorkOrder::query();
-        
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $query->whereBetween('created_at', [$request->from_date, $request->to_date . ' 23:59:59']);
+        $query = \App\Models\WorkOrder::query();
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
         }
 
         $workOrders = $query->get();
 
-        // Kalkulasi data statistik untuk card
         $totalOrders = $workOrders->count();
-        $pendingOrders = $workOrders->where('status', 'Pending')->count();
-        $onProgressOrders = $workOrders->where('status', 'On Progress')->count();
         $completedOrders = $workOrders->where('status', 'Completed')->count();
+        $onProgressOrders = $workOrders->where('status', 'On Progress')->count();
+        $pendingOrders = $workOrders->where('status', 'Pending')->count();
 
-        // Kalkulasi statistik untuk diagram batang (Group By)
+        // ==========================================
+        // LOGIKA HITUNG RATA-RATA DURASI PENGERJAAN
+        // ==========================================
+        $completedWithTime = $workOrders->where('status', 'Completed')->whereNotNull('completed_at');
+        $totalMinutes = 0;
+        
+        foreach ($completedWithTime as $order) {
+            $totalMinutes += \Carbon\Carbon::parse($order->created_at)->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
+        }
+
+        $avgResolutionTime = '0 Menit';
+        if ($completedWithTime->count() > 0) {
+            $avgMinutes = $totalMinutes / $completedWithTime->count();
+            if ($avgMinutes >= 1440) {
+                $avgResolutionTime = round($avgMinutes / 1440, 1) . " Hari";
+            } elseif ($avgMinutes >= 60) {
+                $avgResolutionTime = round($avgMinutes / 60, 1) . " Jam";
+            } else {
+                $avgResolutionTime = round($avgMinutes) . " Menit";
+            }
+        }
+        // ==========================================
+
         $departmentStats = $workOrders->groupBy('department')->map->count();
         $issueStats = $workOrders->groupBy('issue_type')->map->count();
 
         return view('admin-report', compact(
-            'filters', 'totalOrders', 'pendingOrders', 'onProgressOrders', 
-            'completedOrders', 'departmentStats', 'issueStats'
+            'totalOrders', 'completedOrders', 'onProgressOrders', 'pendingOrders',
+            'departmentStats', 'issueStats', 'avgResolutionTime' // Kirim variabel baru ke view
         ));
     }
 
