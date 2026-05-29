@@ -16,6 +16,12 @@ class WorkOrder extends Model
         'description',
         'location',
         'image',
+        'resolution_note',
+        'completed_at',
+    ];
+
+    protected $casts = [
+        'completed_at' => 'datetime',
     ];
 
     protected static function boot()

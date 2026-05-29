@@ -69,14 +69,31 @@ class AdminController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:Pending,On Progress,Completed'
+            'status' => 'required|in:Pending,On Progress,Completed',
+            // Wajibkan note hanya jika statusnya Completed
+            'resolution_note' => 'required_if:status,Completed|nullable|string' 
         ]);
 
         $order = WorkOrder::findOrFail($id);
         $order->status = $request->status;
+
+        // Jika WO diselesaikan, catat keterangan dan waktu selesainya
+        if ($request->status === 'Completed') {
+            $order->resolution_note = $request->resolution_note;
+            
+            // Catat waktu selesai hanya jika sebelumnya belum pernah dicatat
+            if (!$order->completed_at) {
+                $order->completed_at = \Carbon\Carbon::now();
+            }
+        } else {
+            // Jika status dikembalikan ke Pending/Progress, kosongkan waktu dan catatan
+            $order->completed_at = null;
+            $order->resolution_note = null;
+        }
+
         $order->save();
 
-        return redirect()->back()->with('status', 'Status work order berhasil diperbarui!');
+        return redirect()->back()->with('status', 'Status work order dan catatan berhasil diperbarui!');
     }
 
     // 5. Halaman Analisis Laporan (Web View)
