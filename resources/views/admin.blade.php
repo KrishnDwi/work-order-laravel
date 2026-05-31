@@ -77,7 +77,7 @@
                        style="background: #10b981; color: white;">
                        Download Laporan Hari Ini
                     </a>
-                    <a href="/"
+                    <a href="/add"
                        style="background: #2563eb; color: white;">
                        Buat WO Baru
                     </a>
