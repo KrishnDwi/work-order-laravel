@@ -52,6 +52,8 @@ Route::get('/admin/order/{id}', [AdminController::class, 'show']);
 Route::post('/admin/order/{id}/update-status', [AdminController::class, 'updateStatus']);
 Route::get('/admin/report', [AdminController::class, 'report']);
 Route::get('/admin/report/pdf', [AdminController::class, 'downloadPdf']);
+Route::get('/admin/order/{id}/pdf', [AdminController::class, 'downloadWorkOrderPdf']);
+
 Route::get('/welcome', function () {
     return view('welcome');
 });

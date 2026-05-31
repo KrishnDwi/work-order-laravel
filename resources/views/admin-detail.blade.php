@@ -16,10 +16,20 @@
                     <p>Informasi lengkap dan pembaruan status tiket.</p>
                 </div>
             </div>
-
-            <a href="/admin/orders" class="back-link">← Kembali ke Daftar</a>
-
-            @if(session('status'))
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <a href="/admin/orders" class="back-link">← Kembali ke Daftar</a>
+            
+                <a href="/admin/order/{{ $order->id }}/pdf"
+                style="display: inline-flex; align-items: center; gap: 0.4rem;
+                        background: #2563eb; color: #fff; text-decoration: none;
+                        padding: 0.6rem 1.2rem; border-radius: 0.6rem;
+                        font-weight: 700; font-size: 0.9rem;
+                        box-shadow: 0 2px 6px rgba(37,99,235,0.25);
+                        transition: background 0.2s;">
+                    Download PDF
+                </a>
+            </div>
+                        @if(session('status'))
                 <div class="message">{{ session('status') }}</div>
             @endif
 
@@ -43,11 +53,11 @@
                         <strong>Status Saat Ini</strong>
                         <p>
                             @if($order->status === 'Pending')
-                                <span class="status pending">⏳ {{ $order->status }}</span>
+                                <span class="status pending">{{ $order->status }}</span>
                             @elseif($order->status === 'On Progress')
-                                <span class="status open">🔧 {{ $order->status }}</span>
+                                <span class="status open">{{ $order->status }}</span>
                             @else
-                                <span class="status completed">✅ {{ $order->status }}</span>
+                                <span class="status completed">{{ $order->status }}</span>
                             @endif
                         </p>
                     </div>

@@ -176,4 +176,13 @@ class AdminController extends Controller
         $fileName = 'Laporan_Work_Order_' . date('Ymd_His') . '.pdf';
         return $pdf->download($fileName);
     }
+
+    // 7. Download PDF untuk satu Work Order
+    public function downloadWorkOrderPdf($id)
+    {
+        $order = WorkOrder::findOrFail($id);
+        $pdf = Pdf::loadView('pdf.work-order', compact('order'))->setPaper('a4', 'portrait');
+        $fileName = 'WO_' . $order->wo_number . '.pdf';
+        return $pdf->download($fileName);
+    }
 }
