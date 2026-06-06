@@ -75,7 +75,7 @@
                     </div>
                     <div class="grid-full">
                         <label for="image">Attach Photo (Optional)</label>
-                        <input type="file" name="image" id="image" accept="image/*">
+                        <input type="file" name="image" id="image" accept="image/* capture=environment">
                         <small style="color: #6b7280; display: block; margin-top: 0.35rem;">Max 5MB. Format: JPG, JPEG, PNG.</small>
                     </div>
                 </div>
