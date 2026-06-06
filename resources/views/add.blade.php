@@ -47,8 +47,10 @@
                         <label for="department">Department</label>
                         <select id="department" name="department" required>
                             <option value="">Select Department</option>
-                            @foreach(["FB Kitchen","Housekeeping","Front Office","DT","FB Service","P&C","Security","Sales","Acct","A&G"] as $dept)
-                                <option value="{{ $dept }}" {{ old('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->name }}" {{ old('department') == $dept->name ? 'selected' : '' }}>
+                                    {{ $dept->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -56,8 +58,10 @@
                         <label for="issue_type">Issue Type</label>
                         <select id="issue_type" name="issue_type" required>
                             <option value="">Select Issue Type</option>
-                            @foreach(["ELECTRICAL","MECHANICAL","PLUMBING","HVAC","BUILDING","FURNITURE","AV","SAFETY","OTHER"] as $type)
-                                <option value="{{ $type }}" {{ old('issue_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                            @foreach($issueTypes as $type)
+                                <option value="{{ $type->name }}" {{ old('issue_type') == $type->name ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

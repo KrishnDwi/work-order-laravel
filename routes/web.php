@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\WorkOrder;
+use App\Models\Department;
+use App\Models\IssueType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -65,19 +67,25 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/add', function () {
-    return view('add');
+// Ambil semua data dari database
+    $departments = Department::orderBy('name')->get();
+    $issueTypes = IssueType::orderBy('name')->get();
+
+    // Kirim data ke view
+    return view('add', compact('departments', 'issueTypes'));
 });
 
 Route::post('/add', function (Request $request) {
+// Gunakan rule 'exists:nama_tabel,nama_kolom' untuk memvalidasi
     $data = $request->validate([
-        'department' => 'required|in:FB Kitchen,Housekeeping,Front Office,DT,FB Service,P&C,Security,Sales,Acct,A&G',
-        'issue_type' => 'required|in:ELECTRICAL,MECHANICAL,PLUMBING,HVAC,BUILDING,FURNITURE,AV,SAFETY,OTHER',
+        'department' => 'required|exists:departments,name',
+        'issue_type' => 'required|exists:issue_types,name',
         'location' => 'nullable|string|max:255',
         'description' => 'nullable|string',
         'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
     ]);
 
-    // If user uploads image, save to 'storage/app/public/work_orders' folder
+    // Jika user mengunggah gambar, simpan ke folder 'storage/app/public/work_orders'
     if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('work_orders', 'public');
     }
