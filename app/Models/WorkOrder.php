@@ -15,9 +15,11 @@ class WorkOrder extends Model
         'issue_type',
         'description',
         'location',
+        'status',
         'image',
         'resolution_note',
         'completed_at',
+        'duration_minutes',
     ];
 
     protected $casts = [

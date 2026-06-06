@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Work Order - Admin</title>
+    <title>Work Order Report - Admin</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 </head>
 <body>
@@ -14,8 +14,8 @@
         <main class="content">
             <div class="topbar">
                 <div>
-                    <h1>Laporan Analisis Work Order</h1>
-                    <p>Ringkasan data perbaikan dan pemeliharaan berdasarkan periode.</p>
+                    <h1>Work Order Analysis Report</h1>
+                    <p>Summary of repair and maintenance data based on period.</p>
                 </div>
             </div>
 
@@ -23,21 +23,27 @@
                 <form method="GET" action="/admin/report">
                     <div class="filter-grid">
                         <div>
-                            <label for="from_date">Dari Tanggal</label>
+                            <label for="from_date">From Date</label>
                             <input type="date" name="from_date" id="from_date" value="{{ $filters['from_date'] ?? '' }}">
                         </div>
                         <div>
-                            <label for="to_date">Sampai Tanggal</label>
+                            <label for="to_date">To Date</label>
                             <input type="date" name="to_date" id="to_date" value="{{ $filters['to_date'] ?? '' }}">
                         </div>
                         <div class="filter-actions">
                             <button type="submit">Filter Data</button>
                             <a href="/admin/report" class="clear" style="background: #e2e8f0; color: #0f172a;">Reset</a>
                             
-                            <a href="{{ url('/admin/report/pdf') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
-                            style="background: #10b981; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700; margin-left: auto;">
-                            Download PDF
-                            </a>
+                            <div style="margin-left: auto; display: flex; gap: 0.5rem;">
+                                <a href="{{ url('/admin/report/pdf') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
+                                style="background: #10b981; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700;">
+                                📄 Download PDF
+                                </a>
+                                <a href="{{ url('/admin/report/excel') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
+                                style="background: #3b82f6; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700;">
+                                📊 Download Excel
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -45,38 +51,38 @@
 
             <div class="metric-grid">
                 <div class="metric-card total">
-                    <h3>Total Tiket Masuk</h3>
+                    <h3>Total Tickets</h3>
                     <p class="value">{{ $totalOrders }}</p>
                 </div>
                 <div class="metric-card completed">
-                    <h3>Terselesaikan</h3>
+                    <h3>Completed</h3>
                     <p class="value">{{ $completedOrders }}</p>
                 </div>
                 <div class="metric-card progress">
-                    <h3>Sedang Dikerjakan</h3>
+                    <h3>In Progress</h3>
                     <p class="value">{{ $onProgressOrders }}</p>
                 </div>
                 <div class="metric-card pending">
-                    <h3>Belum Ditangani</h3>
+                    <h3>Pending</h3>
                     <p class="value">{{ $pendingOrders }}</p>
                 </div>
                 <div class="metric-card" style="border-bottom: 4px solid #6366f1; background: #f8fafc;">
-                    <h3 style="color: #4f46e5;">⏱️ Rata-rata Durasi</h3>
+                    <h3 style="color: #4f46e5;">⏱️ Average Duration</h3>
                     <p class="value" style="font-size: 1.8rem; margin-top: 1rem; color: #4f46e5;">{{ $avgResolutionTime }}</p>
                 </div>
             </div>
 
             <div class="data-grid">
                 <div class="card">
-                    <h2>Berdasarkan Departemen</h2>
+                    <h2>By Department</h2>
                     @if($departmentStats->isEmpty())
-                        <p style="color: #64748b; text-align: center; padding: 2rem 0;">Belum ada data</p>
+                        <p style="color: #64748b; text-align: center; padding: 2rem 0;">No data available</p>
                     @else
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Departemen</th>
-                                    <th style="text-align: right;">Jumlah WO</th>
+                                    <th>Department</th>
+                                    <th style="text-align: right;">Total WO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,15 +104,15 @@
                 </div>
 
                 <div class="card">
-                    <h2>Berdasarkan Jenis Masalah</h2>
+                    <h2>By Issue Type</h2>
                     @if($issueStats->isEmpty())
-                        <p style="color: #64748b; text-align: center; padding: 2rem 0;">Belum ada data</p>
+                        <p style="color: #64748b; text-align: center; padding: 2rem 0;">No data available</p>
                     @else
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Jenis Masalah</th>
-                                    <th style="text-align: right;">Jumlah WO</th>
+                                    <th>Issue Type</th>
+                                    <th style="text-align: right;">Total WO</th>
                                 </tr>
                             </thead>
                             <tbody>

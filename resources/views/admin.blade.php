@@ -97,17 +97,17 @@
                 <article class="card">
                     <h2>Pending</h2>
                     <div class="value">{{ $workOrders->where('status', 'Pending')->count() }}</div>
-                    <small>Work order dengan status Pending</small>
+                    <small>Work order with status Pending</small>
                 </article>
                 <article class="card">
                     <h2>On Progress</h2>
                     <div class="value">{{ $workOrders->where('status', 'On Progress')->count() }}</div>
-                    <small>Work order yang sedang dikerjakan</small>
+                    <small>Work order that are in progress</small>
                 </article>
                 <article class="card">
                     <h2>Completed</h2>
                     <div class="value">{{ $workOrders->where('status', 'Completed')->count() }}</div>
-                    <small>Work order yang selesai</small>
+                    <small>Work order with status Completed</small>
                 </article>
             </section>
 
@@ -118,25 +118,25 @@
                     <table class="table urgent-table" style="background: transparent; box-shadow: none;">
                         <thead>
                             <tr>
-                                <th>Nomor WO</th>
-                                <th>Departemen</th>
-                                <th>Jenis Masalah</th>
-                                <th>Waktu Tunggu</th>
-                                <th>Aksi</th>
+                                <th>Work Order Number</th>
+                                <th>Department</th>
+                                <th>Issue Type</th>
+                                <th>Wait Time</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($urgentOrders as $urgent)
                             <tr>
-                                <td data-label="Nomor WO"><strong>{{ $urgent->wo_number }}</strong></td>
-                                <td data-label="Departemen">{{ $urgent->department }}</td>
-                                <td data-label="Jenis">{{ $urgent->issue_type }}</td>
-                                <td data-label="Tunggu" style="color: #ef4444; font-weight: 600;">
+                                <td data-label="Work Order Number"><strong>{{ $urgent->wo_number }}</strong></td>
+                                <td data-label="Department">{{ $urgent->department }}</td>
+                                <td data-label="Issue Type">{{ $urgent->issue_type }}</td>
+                                <td data-label="Wait Time" style="color: #ef4444; font-weight: 600;">
                                     {{ \Carbon\Carbon::parse($urgent->created_at)->diffForHumans() }}
                                 </td>
-                                <td data-label="Aksi">
+                                <td data-label="Actions">
                                     <a href="/admin/order/{{ $urgent->id }}" style="color: #2563eb; font-weight: 700; font-size: 0.9rem;">
-                                        Tindak Lanjuti →
+                                        View Detail
                                     </a>
                                 </td>
                             </tr>

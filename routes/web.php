@@ -4,6 +4,7 @@ use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SettingsController;
 
 Route::get('/', function (Request $request) {
     $query = WorkOrder::orderBy('created_at', 'desc');
@@ -48,10 +49,15 @@ Route::get('/', function (Request $request) {
 
 Route::get('/admin', [AdminController::class, 'index']);
 Route::get('/admin/orders', [AdminController::class, 'orders']);
-Route::get('/admin/order/{id}', [AdminController::class, 'show']);
+Route::get('/admin/order/{id}', [AdminController::class, 'show'])->name('admin.detail');
 Route::post('/admin/order/{id}/update-status', [AdminController::class, 'updateStatus']);
+Route::get('/admin/order/{id}/edit', [AdminController::class, 'edit']);
+Route::post('/admin/order/{id}/update', [AdminController::class, 'update']);
+Route::post('/admin/order/{id}/delete', [AdminController::class, 'delete']);
 Route::get('/admin/report', [AdminController::class, 'report']);
 Route::get('/admin/report/pdf', [AdminController::class, 'downloadPdf']);
+Route::get('/admin/report/excel', [AdminController::class, 'downloadExcel']);
+Route::get('/admin/orders/excel', [AdminController::class, 'downloadOrdersExcel']);
 Route::get('/admin/order/{id}/pdf', [AdminController::class, 'downloadWorkOrderPdf']);
 
 Route::get('/welcome', function () {
@@ -68,10 +74,10 @@ Route::post('/add', function (Request $request) {
         'issue_type' => 'required|in:ELECTRICAL,MECHANICAL,PLUMBING,HVAC,BUILDING,FURNITURE,AV,SAFETY,OTHER',
         'location' => 'nullable|string|max:255',
         'description' => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Maksimal 5MB
+        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
     ]);
 
-    // Jika pengguna mengunggah foto, simpan ke folder 'storage/app/public/work_orders'
+    // If user uploads image, save to 'storage/app/public/work_orders' folder
     if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('work_orders', 'public');
     }
@@ -79,8 +85,19 @@ Route::post('/add', function (Request $request) {
     $workOrder = WorkOrder::create($data);
 
     $whatsappNumber = env('ADMIN_WHATSAPP_NUMBER', '628563978602');
-    $message = "Halo Admin, saya telah membuat work order baru:\n\nNomor WO: {$workOrder->wo_number}\nDepartemen: {$workOrder->department}\nLokasi: {$workOrder->location}\nJenis Masalah: {$workOrder->issue_type}\nDeskripsi: {$workOrder->description}\n\nSilakan lihat detail di dashboard. Terima kasih!";
+    $message = "Hello Admin, I have created a new work order:\n\nWO Number: {$workOrder->wo_number}\nDepartment: {$workOrder->department}\nLocation: {$workOrder->location}\nIssue Type: {$workOrder->issue_type}\nDescription: {$workOrder->description}\n\nPlease check the details in the dashboard. Thank you!";
     $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . urlencode($message);
 
     return redirect($whatsappUrl);
 });
+
+// ============ SETTINGS ROUTES ============
+Route::get('/admin/settings/departments', [SettingsController::class, 'departmentIndex']);
+Route::post('/admin/settings/departments', [SettingsController::class, 'departmentStore']);
+Route::post('/admin/settings/departments/{id}/update', [SettingsController::class, 'departmentUpdate']);
+Route::post('/admin/settings/departments/{id}/delete', [SettingsController::class, 'departmentDelete']);
+
+Route::get('/admin/settings/issue-types', [SettingsController::class, 'issueTypeIndex']);
+Route::post('/admin/settings/issue-types', [SettingsController::class, 'issueTypeStore']);
+Route::post('/admin/settings/issue-types/{id}/update', [SettingsController::class, 'issueTypeUpdate']);
+Route::post('/admin/settings/issue-types/{id}/delete', [SettingsController::class, 'issueTypeDelete']);

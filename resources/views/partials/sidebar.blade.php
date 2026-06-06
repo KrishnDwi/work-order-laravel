@@ -23,7 +23,15 @@
             <span class="nav-label">Work Orders</span>
         </a>
         <a href="/admin/report" class="{{ request()->is('admin/report') ? 'active' : '' }}">
-            <span class="nav-label">Laporan</span>
+            <span class="nav-label">Report</span>
+        </a>
+        <div style="border-top: 1px solid #e5e7eb; margin: 0.5rem 0;"></div>
+        <div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">Settings</div>
+        <a href="/admin/settings/departments" class="{{ request()->is('admin/settings/departments') ? 'active' : '' }}" style="padding-left: 2rem;">
+            <span class="nav-label">Departments</span>
+        </a>
+        <a href="/admin/settings/issue-types" class="{{ request()->is('admin/settings/issue-types') ? 'active' : '' }}" style="padding-left: 2rem;">
+            <span class="nav-label">Issue Types</span>
         </a>
     </nav>
 </aside>

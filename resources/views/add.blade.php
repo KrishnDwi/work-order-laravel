@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Work Order</title>
+    <title>Create Work Order</title>
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
 </head>
 <body>
@@ -12,7 +12,7 @@
             <div class="brand">Harris Hotel Seminyak</div>
             <ul class="nav-links">
                 <li><a href="/">Dashboard</a></li>
-                <li><a href="/add" class="active">Buat Work Order</a></li>
+                <li><a href="/add" class="active">Create Work Order</a></li>
             </ul>
             <button class="hamburger">
                 <span></span><span></span><span></span>
@@ -22,16 +22,16 @@
 
     <div class="page-narrow">
         <div class="card">
-            <h1>Form Tambah Work Order</h1>
-            <p class="lead">Isi data work order baru di bawah ini untuk membuat permintaan layanan baru.</p>
+            <h1>Create Work Order Form</h1>
+            <p class="lead">Fill in the new work order data below to create a new service request.</p>
 
             <div class="info-box">
-                <strong>ℹ Nomor work order akan dihasilkan otomatis</strong> dengan format YYYYMM### (contoh: 202605001 untuk order pertama di Mei 2026) dan akan direset setiap awal bulan.
+                <strong>ℹ Work order number will be generated automatically</strong> with format YYYYMM### (example: 202605001 for first order in May 2026) and will reset at the beginning of each month.
             </div>
 
             @if ($errors->any())
                 <div class="error-list">
-                    <strong>Silakan perbaiki kesalahan berikut:</strong>
+                    <strong>Please fix the following errors:</strong>
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -44,39 +44,39 @@
                 @csrf
                 <div class="grid">
                     <div>
-                        <label for="department">Departemen</label>
+                        <label for="department">Department</label>
                         <select id="department" name="department" required>
-                            <option value="">Pilih departemen</option>
+                            <option value="">Select Department</option>
                             @foreach(["FB Kitchen","Housekeeping","Front Office","DT","FB Service","P&C","Security","Sales","Acct","A&G"] as $dept)
                                 <option value="{{ $dept }}" {{ old('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label for="issue_type">Jenis Masalah</label>
+                        <label for="issue_type">Issue Type</label>
                         <select id="issue_type" name="issue_type" required>
-                            <option value="">Pilih jenis masalah</option>
+                            <option value="">Select Issue Type</option>
                             @foreach(["ELECTRICAL","MECHANICAL","PLUMBING","HVAC","BUILDING","FURNITURE","AV","SAFETY","OTHER"] as $type)
                                 <option value="{{ $type }}" {{ old('issue_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div>
-                        <label for="location">Lokasi</label>
-                        <input id="location" name="location" type="text" placeholder="Contoh: Ruang 101, Lantai 3" value="{{ old('location') }}">
+                        <label for="location">Location</label>
+                        <input id="location" name="location" type="text" placeholder="Example: Room 101, Floor 3" value="{{ old('location') }}">
                     </div>
                     <div class="grid-full">
-                        <label for="description">Deskripsi Work Order</label>
-                        <textarea id="description" name="description" placeholder="Jelaskan kebutuhan atau masalah pekerjaan...">{{ old('description') }}</textarea>
+                        <label for="description">Work Order Description</label>
+                        <textarea id="description" name="description" placeholder="Explain the work requirement or issue...">{{ old('description') }}</textarea>
                     </div>
                     <div class="grid-full">
-                        <label for="image">Lampirkan Foto (Opsional)</label>
+                        <label for="image">Attach Photo (Optional)</label>
                         <input type="file" name="image" id="image" accept="image/*">
-                        <small style="color: #6b7280; display: block; margin-top: 0.35rem;">Batas maksimal 5MB. Format: JPG, JPEG, PNG.</small>
+                        <small style="color: #6b7280; display: block; margin-top: 0.35rem;">Max 5MB. Format: JPG, JPEG, PNG.</small>
                     </div>
                 </div>
                 <div class="actions">
-                    <button type="submit">Simpan Work Order</button>
+                    <button type="submit">Save Work Order</button>
                 </div>
             </form>
         </div>

@@ -12,7 +12,7 @@
             <div class="brand">Harris Hotel Seminyak</div>
             <ul class="nav-links">
                 <li><a href="/" class="active">Dashboard</a></li>
-                <li><a href="/add">Buat Work Order</a></li>
+                <li><a href="/add">Create Work Order</a></li>
             </ul>
             <button class="hamburger">
                 <span></span><span></span><span></span>
@@ -23,10 +23,10 @@
     <div class="page">
         <header class="header">
             <div class="hero">
-                <h1>Dashboard Work Order</h1>
-                <p>Kelola dan pantau semua work order dari satu tempat.</p>
+                <h1>Work Order Dashboard</h1>
+                <p>Manage and monitor all work orders in one place.</p>
             </div>
-            <a href="/add" class="create-btn">+ Buat Work Order Baru</a>
+            <a href="/add" class="create-btn">+ Create New Work Order</a>
         </header>
 
         @if(session('status'))
