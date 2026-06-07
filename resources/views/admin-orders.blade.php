@@ -100,10 +100,10 @@
                         <div class="filter-actions">
                             <button type="submit">Apply</button>
                             <a href="/admin/orders">Reset</a>
-                            <a href="{{ url('/admin/orders/excel') }}?{{ request()->getQueryString() }}" 
+                            {{-- <a href="{{ url('/admin/orders/excel') }}?{{ request()->getQueryString() }}" 
                             style="background: #3b82f6; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700; margin-left: auto;">
                             📊 Download Excel
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </form>
@@ -143,8 +143,8 @@
                                     <td data-label="Created">{{ date('d/m/Y H:i', strtotime($order->created_at)) }}</td>
                                     <td data-label="Actions">
                                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                            <a href="/admin/order/{{ $order->id }}/edit" style="background: #f59e0b; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; text-decoration: none; font-size: 0.85rem; font-weight: 600;">✏️ Edit</a>
-                                            <button onclick="deleteOrder({{ $order->id }})" style="background: #ef4444; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer;">🗑️ Delete</button>
+                                            <a href="/admin/order/{{ $order->id }}/edit" style="background: #f59e0b; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; text-decoration: none; font-size: 0.85rem; font-weight: 600;">Edit</a>
+                                            <button onclick="deleteOrder({{ $order->id }})" style="background: #ef4444; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
