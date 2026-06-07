@@ -29,7 +29,7 @@
                             transition: background 0.2s;">
                         Download PDF
                     </a>
-                    <a href="/admin/order/{{ $order->id }}/edit"
+                    {{-- <a href="/admin/order/{{ $order->id }}/edit"
                     style="display: inline-flex; align-items: center; gap: 0.4rem;
                             background: #f59e0b; color: #fff; text-decoration: none;
                             padding: 0.6rem 1.2rem; border-radius: 0.6rem;
@@ -37,7 +37,7 @@
                             box-shadow: 0 2px 6px rgba(245,158,11,0.25);
                             transition: background 0.2s;">
                         ✏️ Edit
-                    </a>
+                    </a> --}}
                 </div>
             </div>
                         @if(session('status'))
@@ -148,7 +148,7 @@
                         <textarea name="resolution_note" id="resolution_note" rows="3" placeholder="Tuliskan apa saja yang sudah diperbaiki atau diganti..." style="width: 100%; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; font-family: inherit;">{{ $order->resolution_note }}</textarea>
                     </div>
 
-                    <button type="submit" style="background: #2563eb; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);">💾 Save Changes</button>
+                    <button type="submit" style="background: #2563eb; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);">Save Changes</button>
                 </form>
             </div>
 
