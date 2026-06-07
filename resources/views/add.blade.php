@@ -25,9 +25,9 @@
             <h1>Create Work Order Form</h1>
             <p class="lead">Fill in the new work order data below to create a new service request.</p>
 
-            <div class="info-box">
+            {{-- <div class="info-box">
                 <strong>ℹ Work order number will be generated automatically</strong> with format YYYYMM### (example: 202605001 for first order in May 2026) and will reset at the beginning of each month.
-            </div>
+            </div> --}}
 
             @if ($errors->any())
                 <div class="error-list">
