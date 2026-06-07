@@ -306,4 +306,5 @@ button[type="submit"]:hover { background: #1d4ed8; transform: translateY(-1px); 
     button[type="submit"] { width: 100%; }
 
     .stat-card strong { font-size: 1.6rem; }
+    .hero {flex: 1 1 60px;}
 }
