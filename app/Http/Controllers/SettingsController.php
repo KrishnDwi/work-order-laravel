@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\IssueType;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -90,5 +92,71 @@ class SettingsController extends Controller
         $issueType->delete();
 
         return redirect('/admin/settings/issue-types')->with('success', 'Issue type deleted successfully.');
+    }
+
+    // ============ USERS (ADMIN WA SETTINGS) ============
+    
+    public function userIndex()
+    {
+        $users = User::all();
+        return view('admin-users', compact('users'));
+    }
+
+    public function userStore(Request $request)
+    {
+        // Hanya perlu validasi Nama dan Nomor WA
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:20',
+        ]);
+
+        $isActive = $request->has('is_wa_active');
+
+        // Jika user baru ini langsung diaktifkan WA-nya, matikan WA admin lain
+        if ($isActive) {
+            User::query()->update(['is_wa_active' => false]);
+        }
+
+        // --- TRIK: Generate Dummy Email & Password otomatis ---
+        // Membuat email unik otomatis dari nama admin + angka acak
+        $cleanName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $validated['name']));
+        $dummyEmail = $cleanName . rand(1000, 9999) . '@wa-admin.local';
+        $dummyPassword = Hash::make('password123'); 
+
+        // Simpan data ke database
+        User::create([
+            'name' => $validated['name'],
+            'email' => $dummyEmail,
+            'password' => $dummyPassword,
+            'phone_number' => $validated['phone_number'],
+            'is_wa_active' => $isActive,
+        ]);
+
+        return redirect('/admin/settings/users')->with('success', 'Admin WhatsApp berhasil ditambahkan.');
+    }
+
+    public function userUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        $request->validate([
+            'phone_number' => 'nullable|string|max:20',
+        ]);
+
+        // Cek apakah admin ini dicentang sebagai Admin Aktif WA
+        $isActive = $request->has('is_wa_active');
+
+        // Opsional cerdas: Jika admin ini diaktifkan, maka sistem otomatis mematikan 
+        // status admin lainnya, agar WA hanya dikirim ke 1 admin saja.
+        if ($isActive) {
+            User::where('id', '!=', $id)->update(['is_wa_active' => false]);
+        }
+
+        $user->update([
+            'phone_number' => $request->phone_number,
+            'is_wa_active' => $isActive,
+        ]);
+
+        return redirect('/admin/settings/users')->with('success', 'Admin WhatsApp settings updated successfully.');
     }
 }

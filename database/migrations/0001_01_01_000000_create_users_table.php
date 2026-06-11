@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->string('phone_number')->nullable(); // Nomor HP/WA Admin
+            $table->boolean('is_wa_active')->default(false); // Penanda admin aktif (default false)
+
             $table->rememberToken();
             $table->timestamps();
         });

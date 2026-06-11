@@ -11,29 +11,8 @@ return new class extends Migration
         Schema::create('work_order', function (Blueprint $table) {
             $table->id();
             $table->string('wo_number')->unique();
-            $table->enum('department', [
-                'FB Kitchen',
-                'Housekeeping',
-                'Front Office',
-                'DT',
-                'FB Service',
-                'P&C',
-                'Security',
-                'Sales',
-                'Acct',
-                'A&G',
-            ]);
-            $table->enum('issue_type', [
-                'ELECTRICAL',
-                'MECHANICAL',
-                'PLUMBING',
-                'HVAC',
-                'BUILDING',
-                'FURNITURE',
-                'AV',
-                'SAFETY',
-                'OTHER',
-            ]);
+            $table->string('department', 100);
+            $table->string('issue_type', 100);
             $table->text('description')->nullable();
             $table->enum('status', ['Pending', 'On Progress', 'Completed'])->default('Pending');
             $table->timestamp('created_at')->useCurrent();

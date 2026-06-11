@@ -26,14 +26,14 @@ class OptionsSeeder extends Seeder
 
         // Default Issue Types
         $issueTypes = [
-            ['name' => 'ELECTRICAL', 'description' => 'Electrical Problems'],
-            ['name' => 'MECHANICAL', 'description' => 'Mechanical Issues'],
+            ['name' => 'ELECTRICAL MECHANICAL', 'description' => 'Electrical and Mechanical Problems'],
             ['name' => 'PLUMBING', 'description' => 'Plumbing Problems'],
             ['name' => 'HVAC', 'description' => 'Heating, Ventilation & Air Conditioning'],
             ['name' => 'BUILDING', 'description' => 'Building Structure Issues'],
             ['name' => 'FURNITURE', 'description' => 'Furniture & Fixtures'],
             ['name' => 'AV', 'description' => 'Audio & Visual Systems'],
             ['name' => 'SAFETY', 'description' => 'Safety & Emergency'],
+            ['name' => 'KITCHEN EQUIPMENT', 'description' => 'Kitchen Equipment Issues'],
             ['name' => 'OTHER', 'description' => 'Other Issues'],
         ];
 

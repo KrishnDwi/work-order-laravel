@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number', // Tambahkan ini
+        'is_wa_active', // Tambahkan ini
     ];
 
     /**
@@ -42,6 +44,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_wa_active' => 'boolean', // Pastikan formatnya selalu boolean (true/false)
         ];
     }
 }

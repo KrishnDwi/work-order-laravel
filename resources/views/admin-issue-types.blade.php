@@ -6,97 +6,22 @@
     <title>Manage Issue Types | Admin</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <style>
-        .option-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        .option-info {
-            flex: 1;
-        }
-        .option-info h3 {
-            margin: 0 0 0.25rem 0;
-            color: #1f2937;
-        }
-        .option-info p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-        .option-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .btn-edit, .btn-delete {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .btn-edit {
-            background: #f59e0b;
-            color: white;
-        }
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-        }
-        .btn-edit:hover {
-            background: #d97706;
-        }
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-        .form-section {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #334155;
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 0.5rem;
-            font-size: 0.95rem;
-            font-family: inherit;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-        .btn-submit {
-            background: #10b981;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .btn-submit:hover {
-            background: #059669;
-        }
+        .option-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+        .option-info { flex: 1; }
+        .option-info h3 { margin: 0 0 0.25rem 0; color: #1f2937; display: flex; align-items: center; gap: 0.5rem; }
+        .option-info p { margin: 0; color: #6b7280; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .option-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .btn-edit { padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #f59e0b; color: white; }
+        .btn-edit:hover { background: #d97706; }
+        .btn-delete { padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: #ef4444; color: white; }
+        .btn-delete:hover { background: #dc2626; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #334155; }
+        .form-group input[type="text"], .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.95rem; font-family: inherit; box-sizing: border-box; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .btn-submit { background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; font-weight: 700; cursor: pointer; }
+        .btn-submit:hover { background: #059669; }
+        .modal-content { background: white; max-width: 500px; margin: auto; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -106,11 +31,11 @@
             <div class="topbar">
                 <div>
                     <h1>Manage Issue Types</h1>
-                    <p>Add, edit, or delete issue type options used in work orders.</p>
+                    <p>Manage the categories/types of issues that can be reported through Work Order.</p>
                 </div>
             </div>
 
-            <a href="/admin/orders" class="back-link">← Back to Orders</a>
+            {{-- <a href="/admin/orders" class="back-link">← Back to Orders</a> --}}
 
             @if(session('success'))
                 <div style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem; border-left: 4px solid #22c55e;">
@@ -119,30 +44,13 @@
             @endif
 
             <div class="card">
-                <!-- Add New Issue Type Form -->
-                <div class="form-section">
-                    <h2 style="margin-top: 0;">Add New Issue Type</h2>
-                    <form method="POST" action="/admin/settings/issue-types">
-                        @csrf
-                        <div class="form-group">
-                            <label for="name">Issue Type Name</label>
-                            <input type="text" name="name" id="name" placeholder="e.g., ELECTRICAL, MECHANICAL, PLUMBING" required>
-                            @error('name')
-                                <small style="color: #ef4444;">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description (Optional)</label>
-                            <textarea name="description" id="description" placeholder="Brief description of this issue type..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit">+ Add Issue Type</button>
-                    </form>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">
+                    <h2 style="margin: 0;">List Issue Types ({{ $issueTypes->count() }})</h2>
+                    <button onclick="openAddModal()" class="btn-submit" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">+ Add Issue Type</button>
                 </div>
-
-                <!-- Existing Issue Types List -->
-                <h2>Existing Issue Types ({{ $issueTypes->count() }})</h2>
+                
                 @if($issueTypes->isEmpty())
-                    <p style="color: #6b7280; text-align: center; padding: 2rem;">No issue types yet. Add one above.</p>
+                    <p style="color: #6b7280; text-align: center; padding: 2rem;">No issue types found. Add a new one.</p>
                 @else
                     @foreach($issueTypes as $type)
                         <div class="option-card">
@@ -153,10 +61,10 @@
                                 @endif
                             </div>
                             <div class="option-actions">
-                                <button class="btn-edit" onclick="editIssueType({{ $type->id }}, '{{ $type->name }}', '{{ $type->description }}')">✏️ Edit</button>
+                                <button class="btn-edit" onclick="editIssueType({{ $type->id }}, '{{ addslashes($type->name) }}', '{{ addslashes($type->description) }}')">Edit</button>
                                 <form method="POST" action="/admin/settings/issue-types/{{ $type->id }}/delete" style="display: inline;">
                                     @csrf
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Delete this issue type?')">🗑️ Delete</button>
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus jenis masalah ini?')">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -166,46 +74,82 @@
         </main>
     </div>
 
-    <!-- Edit Modal -->
+    <div id="addModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Tambah Jenis Masalah</h2>
+            
+            <form method="POST" action="/admin/settings/issue-types">
+                @csrf
+                <div class="form-group">
+                    <label for="name">Nama Jenis Masalah</label>
+                    <input type="text" name="name" id="name" placeholder="Contoh: ELECTRICAL, PLUMBING" required value="{{ old('name') }}">
+                    @error('name') <small style="color: #ef4444;">{{ $message }}</small> @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Deskripsi (Opsional)</label>
+                    <textarea name="description" id="description" placeholder="Penjelasan singkat mengenai jenis masalah ini...">{{ old('description') }}</textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" onclick="closeAddModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
+                    <button type="submit" class="btn-submit">Simpan Jenis Masalah</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
-        <div style="background: white; max-width: 500px; margin: auto; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-            <h2>Edit Issue Type</h2>
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Edit Jenis Masalah</h2>
+            
             <form id="editForm" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="editName">Issue Type Name</label>
+                    <label for="editName">Nama Jenis Masalah</label>
                     <input type="text" name="name" id="editName" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="editDescription">Description</label>
+                    <label for="editDescription">Deskripsi (Opsional)</label>
                     <textarea name="description" id="editDescription"></textarea>
                 </div>
-                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer;">Cancel</button>
-                    <button type="submit" class="btn-submit">Save Changes</button>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
+                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+            document.getElementById('addModal').style.alignItems = 'center';
+        }
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
+
         function editIssueType(id, name, description) {
             document.getElementById('editName').value = name;
-            document.getElementById('editDescription').value = description;
+            document.getElementById('editDescription').value = description || '';
             document.getElementById('editForm').action = '/admin/settings/issue-types/' + id + '/update';
+            
             document.getElementById('editModal').style.display = 'flex';
             document.getElementById('editModal').style.alignItems = 'center';
         }
-
         function closeEditModal() {
             document.getElementById('editModal').style.display = 'none';
         }
 
-        document.getElementById('editModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeEditModal();
-            }
-        });
+        document.getElementById('addModal').addEventListener('click', function(e) { if (e.target === this) closeAddModal(); });
+        document.getElementById('editModal').addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
+
+        @if($errors->has('name'))
+            window.onload = function() { openAddModal(); }
+        @endif
     </script>
 </body>
 </html>
