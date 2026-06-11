@@ -64,7 +64,7 @@
                                 <button class="btn-edit" onclick="editIssueType({{ $type->id }}, '{{ addslashes($type->name) }}', '{{ addslashes($type->description) }}')">Edit</button>
                                 <form method="POST" action="/admin/settings/issue-types/{{ $type->id }}/delete" style="display: inline;">
                                     @csrf
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus jenis masalah ini?')">Delete</button>
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this issue type?')">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -76,24 +76,24 @@
 
     <div id="addModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Tambah Jenis Masalah</h2>
+            <h2 style="margin-top: 0;">Add Issue Type</h2>
             
             <form method="POST" action="/admin/settings/issue-types">
                 @csrf
                 <div class="form-group">
-                    <label for="name">Nama Jenis Masalah</label>
-                    <input type="text" name="name" id="name" placeholder="Contoh: ELECTRICAL, PLUMBING" required value="{{ old('name') }}">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" placeholder="Example: ELECTRICAL, PLUMBING" required value="{{ old('name') }}">
                     @error('name') <small style="color: #ef4444;">{{ $message }}</small> @enderror
                 </div>
                 
                 <div class="form-group">
-                    <label for="description">Deskripsi (Opsional)</label>
-                    <textarea name="description" id="description" placeholder="Penjelasan singkat mengenai jenis masalah ini...">{{ old('description') }}</textarea>
+                    <label for="description">Description (Optional)</label>
+                    <textarea name="description" id="description" placeholder="Brief explanation about this issue type...">{{ old('description') }}</textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" onclick="closeAddModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
-                    <button type="submit" class="btn-submit">Simpan Jenis Masalah</button>
+                    <button type="button" onclick="closeAddModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Cancel</button>
+                    <button type="submit" class="btn-submit">Save Issue Type</button>
                 </div>
             </form>
         </div>
@@ -101,23 +101,23 @@
 
     <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Edit Jenis Masalah</h2>
+            <h2 style="margin-top: 0;">Edit Issue Type</h2>
             
             <form id="editForm" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="editName">Nama Jenis Masalah</label>
+                    <label for="editName">Name</label>
                     <input type="text" name="name" id="editName" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="editDescription">Deskripsi (Opsional)</label>
+                    <label for="editDescription">Description (Optional)</label>
                     <textarea name="description" id="editDescription"></textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
-                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Cancel</button>
+                    <button type="submit" class="btn-submit">Save Changes</button>
                 </div>
             </form>
         </div>

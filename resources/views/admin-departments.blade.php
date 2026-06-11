@@ -46,7 +46,7 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">
                     <h2 style="margin: 0;">List Departments ({{ $departments->count() }})</h2>
-                    <button onclick="openAddModal()" class="btn-submit" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">+ Add Department</button>
+                    <button onclick="openAddModal()" class="btn-submit" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Add Department</button>
                 </div>
                 
                 @if($departments->isEmpty())
@@ -64,7 +64,7 @@
                                 <button class="btn-edit" onclick="editDepartment({{ $dept->id }}, '{{ addslashes($dept->name) }}', '{{ addslashes($dept->description) }}')">Edit</button>
                                 <form method="POST" action="/admin/settings/departments/{{ $dept->id }}/delete" style="display: inline;">
                                     @csrf
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Yakin ingin menghapus departemen ini?')">Delete</button>
+                                    <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this department?')">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -76,24 +76,24 @@
 
     <div id="addModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Tambah Departemen</h2>
+            <h2 style="margin-top: 0;">Add Department</h2>
             
             <form method="POST" action="/admin/settings/departments">
                 @csrf
                 <div class="form-group">
-                    <label for="name">Nama Departemen</label>
-                    <input type="text" name="name" id="name" placeholder="Contoh: FB Kitchen, Engineering" required value="{{ old('name') }}">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" placeholder="Example: FB Kitchen, Engineering" required value="{{ old('name') }}">
                     @error('name') <small style="color: #ef4444;">{{ $message }}</small> @enderror
                 </div>
                 
                 <div class="form-group">
-                    <label for="description">Deskripsi (Opsional)</label>
-                    <textarea name="description" id="description" placeholder="Penjelasan singkat mengenai departemen ini...">{{ old('description') }}</textarea>
+                    <label for="description">Description (Optional)</label>
+                    <textarea name="description" id="description" placeholder="Brief explanation about this department...">{{ old('description') }}</textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" onclick="closeAddModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
-                    <button type="submit" class="btn-submit">Simpan Departemen</button>
+                    <button type="button" onclick="closeAddModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Cancel</button>
+                    <button type="submit" class="btn-submit">Save Department</button>
                 </div>
             </form>
         </div>
@@ -101,23 +101,23 @@
 
     <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 2rem;">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Edit Departemen</h2>
+            <h2 style="margin-top: 0;">Edit Department</h2>
             
             <form id="editForm" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="editName">Nama Departemen</label>
+                    <label for="editName">Name</label>
                     <input type="text" name="name" id="editName" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="editDescription">Deskripsi (Opsional)</label>
+                    <label for="editDescription">Description (Optional)</label>
                     <textarea name="description" id="editDescription"></textarea>
                 </div>
 
                 <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Batal</button>
-                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 1.5rem; border: 1px solid #cbd5e1; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: bold; color: #475569;">Cancel</button>
+                    <button type="submit" class="btn-submit">Save Changes</button>
                 </div>
             </form>
         </div>
