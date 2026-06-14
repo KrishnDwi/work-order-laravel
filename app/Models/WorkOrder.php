@@ -23,6 +23,7 @@ class WorkOrder extends Model
     ];
 
     protected $casts = [
+        'created_at' => 'datetime',
         'completed_at' => 'datetime',
     ];
 

@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-                <a href="/admin/orders" class="back-link">← Back to List</a>
+                {{-- <a href="/admin/orders" class="back-link">← Back to List</a> --}}
             
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     <a href="/admin/order/{{ $order->id }}/pdf"
@@ -129,52 +129,44 @@
                 @endif
             </div>
 
+            @if($order->status !== 'Completed')
             <div class="card" style="background: #f8fafc; border: 1px solid #e2e8f0;">
-                <h2>Tindak Lanjuti (Update Status)</h2>
-                <form method="POST" action="/admin/order/{{ $order->id }}/update-status">
-                    @csrf
+                <h2>Follow Up</h2>
+                
+                @if($order->status === 'Pending')
+                    <p style="color: #64748b; margin-bottom: 1.5rem;">This order is <strong>Pending</strong>. Please accept this ticket to start working on it.</p>
                     
-                    <div style="margin-bottom: 1.25rem;">
-                        <label for="status-select" style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #334155;">Pilih Status Pengerjaan</label>
-                        <select name="status" id="status-select" style="width: 100%; max-width: 400px; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; font-size: 1rem;">
-                            <option value="Pending" {{ $order->status === 'Pending' ? 'selected' : '' }}>⏳ Pending</option>
-                            <option value="On Progress" {{ $order->status === 'On Progress' ? 'selected' : '' }}>🔧 On Progress</option>
-                            <option value="Completed" {{ $order->status === 'Completed' ? 'selected' : '' }}>✅ Completed</option>
-                        </select>
-                    </div>
+                    <form method="POST" action="/admin/order/{{ $order->id }}/update-status">
+                        @csrf
+                        <input type="hidden" name="status" value="On Progress">
+                        
+                        <button type="submit" style="background: #f59e0b; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2); transition: 0.2s;">
+                            Accept WO
+                        </button>
+                    </form>
 
-                    <div id="resolution-group" style="margin-bottom: 1.25rem; display: {{ $order->status === 'Completed' ? 'block' : 'none' }};">
-                        <label for="resolution_note" style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #334155;">Keterangan Penyelesaian (Wajib)</label>
-                        <textarea name="resolution_note" id="resolution_note" rows="3" placeholder="Tuliskan apa saja yang sudah diperbaiki atau diganti..." style="width: 100%; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; font-family: inherit;">{{ $order->resolution_note }}</textarea>
-                    </div>
+                @elseif($order->status === 'On Progress')
+                    <p style="color: #64748b; margin-bottom: 1.5rem;">This order is <strong>On Progress</strong>. If completed, please fill in the resolution notes and complete the ticket.</p>
+                    
+                    <form method="POST" action="/admin/order/{{ $order->id }}/update-status">
+                        @csrf
+                        <input type="hidden" name="status" value="Completed">
+                        
+                        <div style="margin-bottom: 1.25rem;">
+                            <label for="resolution_note" style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #334155;">Resolution Note (Required)</label>
+                            <textarea name="resolution_note" id="resolution_note" rows="4" placeholder="List the repairs or replacements made..." style="width: 100%; padding: 0.85rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; font-family: inherit;" required></textarea>
+                        </div>
 
-                    <button type="submit" style="background: #2563eb; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);">Save Changes</button>
-                </form>
+                        <button type="submit" style="background: #10b981; color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); transition: 0.2s;">
+                            Complete WO
+                        </button>
+                    </form>
+                @endif
             </div>
+            @endif
 
             @include('partials.footer')
         </main>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const statusSelect = document.getElementById('status-select');
-            const resolutionGroup = document.getElementById('resolution-group');
-            const resolutionInput = document.getElementById('resolution_note');
-
-            function toggleResolutionNote() {
-                if (statusSelect.value === 'Completed') {
-                    resolutionGroup.style.display = 'block';
-                    resolutionInput.setAttribute('required', 'required');
-                } else {
-                    resolutionGroup.style.display = 'none';
-                    resolutionInput.removeAttribute('required');
-                }
-            }
-
-            statusSelect.addEventListener('change', toggleResolutionNote);
-            toggleResolutionNote(); // Jalankan sekali saat halaman dimuat
-        });
-    </script>
 </body>
 </html>

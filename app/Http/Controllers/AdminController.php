@@ -70,25 +70,26 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|in:Pending,On Progress,Completed',
-            // Require note only if status is Completed
             'resolution_note' => 'required_if:status,Completed|nullable|string' 
         ]);
 
         $order = WorkOrder::findOrFail($id);
         $order->status = $request->status;
 
-        // If WO is completed, record the resolution note and completion time
         if ($request->status === 'Completed') {
             $order->resolution_note = $request->resolution_note;
             
-            // Record completion time only if it hasn't been recorded before
             if (!$order->completed_at) {
                 $order->completed_at = \Carbon\Carbon::now();
             }
+
+            // HITUNG DURASI DAN SIMPAN KE DATABASE
+            $order->duration_minutes = \Carbon\Carbon::parse($order->created_at)->diffInMinutes($order->completed_at);
+            
         } else {
-            // If status is changed back to Pending/Progress, clear time and notes
             $order->completed_at = null;
             $order->resolution_note = null;
+            $order->duration_minutes = null; // Kosongkan kembali jika status batal selesai
         }
 
         $order->save();
@@ -220,7 +221,7 @@ class AdminController extends Controller
                 'Status',
                 'Tanggal Dibuat',
                 'Tanggal Selesai',
-                'Durasi (Jam)',
+                'Durasi (Menit)',
                 'Catatan Penyelesaian'
             ], ';');
             
@@ -228,12 +229,11 @@ class AdminController extends Controller
             foreach ($workOrders as $order) {
                 $duration = '';
                 if ($order->status === 'Completed' && $order->completed_at) {
-                    // Gunakan duration_minutes dari database jika ada
+                    // Tampilkan langsung dalam satuan menit
                     if ($order->duration_minutes) {
-                        $duration = round($order->duration_minutes / 60, 1);
+                        $duration = $order->duration_minutes;
                     } else {
-                        $minutes = \Carbon\Carbon::parse($order->created_at)->diffInMinutes($order->completed_at);
-                        $duration = round($minutes / 60, 1);
+                        $duration = \Carbon\Carbon::parse($order->created_at)->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
                     }
                 }
                 
@@ -311,7 +311,7 @@ class AdminController extends Controller
                 'Status',
                 'Tanggal Dibuat',
                 'Tanggal Selesai',
-                'Durasi (Jam)',
+                'Durasi (Menit)',
                 'Catatan Penyelesaian'
             ], ';');
             
@@ -319,12 +319,11 @@ class AdminController extends Controller
             foreach ($workOrders as $order) {
                 $duration = '';
                 if ($order->status === 'Completed' && $order->completed_at) {
-                    // Gunakan duration_minutes dari database jika ada
+                    // Tampilkan langsung dalam satuan menit
                     if ($order->duration_minutes) {
-                        $duration = round($order->duration_minutes / 60, 1);
+                        $duration = $order->duration_minutes;
                     } else {
-                        $minutes = \Carbon\Carbon::parse($order->created_at)->diffInMinutes($order->completed_at);
-                        $duration = round($minutes / 60, 1);
+                        $duration = \Carbon\Carbon::parse($order->created_at)->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
                     }
                 }
                 

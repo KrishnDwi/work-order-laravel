@@ -37,11 +37,11 @@
                             <div style="margin-left: auto; display: flex; gap: 0.5rem;">
                                 <a href="{{ url('/admin/report/pdf') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
                                 style="background: #10b981; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700;">
-                                📄 Download PDF
+                                Download PDF
                                 </a>
                                 <a href="{{ url('/admin/report/excel') }}?from_date={{ request('from_date') }}&to_date={{ request('to_date') }}" 
                                 style="background: #3b82f6; color: white; padding: 0.85rem 1rem; border-radius: 0.75rem; font-weight: 700;">
-                                📊 Download Excel
+                                Download Excel
                                 </a>
                             </div>
                         </div>
