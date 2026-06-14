@@ -143,7 +143,7 @@
                                     <td data-label="Created">{{ date('d/m/Y H:i', strtotime($order->created_at)) }}</td>
                                     <td data-label="Actions">
                                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                            <a href="/admin/order/{{ $order->id }}/edit" style="background: #f59e0b; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; text-decoration: none; font-size: 0.85rem; font-weight: 600;">Edit</a>
+                                            {{-- <a href="/admin/order/{{ $order->id }}/edit" style="background: #f59e0b; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; text-decoration: none; font-size: 0.85rem; font-weight: 600;">Edit</a> --}}
                                             <button onclick="deleteOrder({{ $order->id }})" style="background: #ef4444; color: white; padding: 0.4rem 0.8rem; border-radius: 0.4rem; border: none; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Delete</button>
                                         </div>
                                     </td>

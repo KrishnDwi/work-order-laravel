@@ -66,10 +66,10 @@
                     <h3>Pending</h3>
                     <p class="value">{{ $pendingOrders }}</p>
                 </div>
-                <div class="metric-card" style="border-bottom: 4px solid #6366f1; background: #f8fafc;">
+                {{-- <div class="metric-card" style="border-bottom: 4px solid #6366f1; background: #f8fafc;">
                     <h3 style="color: #4f46e5;">⏱️ Average Duration</h3>
                     <p class="value" style="font-size: 1.8rem; margin-top: 1rem; color: #4f46e5;">{{ $avgResolutionTime }}</p>
-                </div>
+                </div> --}}
             </div>
 
             <div class="data-grid">

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\WorkOrder;
+use App\Models\Department;
+use App\Models\IssueType;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
@@ -70,26 +72,37 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|in:Pending,On Progress,Completed',
-            'resolution_note' => 'required_if:status,Completed|nullable|string' 
+            'resolution_note' => 'required_if:status,Completed|nullable|string'
         ]);
 
         $order = WorkOrder::findOrFail($id);
         $order->status = $request->status;
 
-        if ($request->status === 'Completed') {
+        if ($request->status === 'On Progress') {
+            // Catat waktu mulai pengerjaan, hanya jika belum pernah di-set
+            if (!$order->started_at) {
+                $order->started_at = \Carbon\Carbon::now();
+            }
+
+        } elseif ($request->status === 'Completed') {
             $order->resolution_note = $request->resolution_note;
-            
+
             if (!$order->completed_at) {
                 $order->completed_at = \Carbon\Carbon::now();
             }
 
-            // HITUNG DURASI DAN SIMPAN KE DATABASE
-            $order->duration_minutes = \Carbon\Carbon::parse($order->created_at)->diffInMinutes($order->completed_at);
-            
+            // Hitung durasi dari started_at ke completed_at
+            // Fallback ke created_at jika WO langsung di-complete tanpa On Progress
+            $startTime = $order->started_at ?? $order->created_at;
+            $order->duration_minutes = (int) \Carbon\Carbon::parse($startTime)
+                                            ->diffInMinutes($order->completed_at);
+
         } else {
+            // Status kembali ke Pending - reset semua
+            $order->started_at = null;
             $order->completed_at = null;
             $order->resolution_note = null;
-            $order->duration_minutes = null; // Kosongkan kembali jika status batal selesai
+            $order->duration_minutes = null;
         }
 
         $order->save();
@@ -220,6 +233,7 @@ class AdminController extends Controller
                 'Lokasi',
                 'Status',
                 'Tanggal Dibuat',
+                'Tanggal Mulai',
                 'Tanggal Selesai',
                 'Durasi (Menit)',
                 'Catatan Penyelesaian'
@@ -229,11 +243,11 @@ class AdminController extends Controller
             foreach ($workOrders as $order) {
                 $duration = '';
                 if ($order->status === 'Completed' && $order->completed_at) {
-                    // Tampilkan langsung dalam satuan menit
                     if ($order->duration_minutes) {
-                        $duration = $order->duration_minutes;
+                        $duration = (int) $order->duration_minutes; // pastikan bilangan bulat
                     } else {
-                        $duration = \Carbon\Carbon::parse($order->created_at)->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
+                        $duration = (int) \Carbon\Carbon::parse($order->created_at)
+                                        ->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
                     }
                 }
                 
@@ -245,6 +259,7 @@ class AdminController extends Controller
                     $order->location,
                     $order->status,
                     \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i'),
+                    $order->started_at ? \Carbon\Carbon::parse($order->started_at)->format('d/m/Y H:i') : '-',
                     $order->completed_at ? \Carbon\Carbon::parse($order->completed_at)->format('d/m/Y H:i') : '-',
                     $duration,
                     $order->resolution_note ?? '-'
@@ -310,6 +325,7 @@ class AdminController extends Controller
                 'Lokasi',
                 'Status',
                 'Tanggal Dibuat',
+                'Tanggal Mulai',
                 'Tanggal Selesai',
                 'Durasi (Menit)',
                 'Catatan Penyelesaian'
@@ -319,11 +335,11 @@ class AdminController extends Controller
             foreach ($workOrders as $order) {
                 $duration = '';
                 if ($order->status === 'Completed' && $order->completed_at) {
-                    // Tampilkan langsung dalam satuan menit
                     if ($order->duration_minutes) {
-                        $duration = $order->duration_minutes;
+                        $duration = (int) $order->duration_minutes; // pastikan bilangan bulat
                     } else {
-                        $duration = \Carbon\Carbon::parse($order->created_at)->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
+                        $duration = (int) \Carbon\Carbon::parse($order->created_at)
+                                        ->diffInMinutes(\Carbon\Carbon::parse($order->completed_at));
                     }
                 }
                 
@@ -335,6 +351,7 @@ class AdminController extends Controller
                     $order->location,
                     $order->status,
                     \Carbon\Carbon::parse($order->created_at)->format('d/m/Y H:i'),
+                    $order->started_at ? \Carbon\Carbon::parse($order->started_at)->format('d/m/Y H:i') : '-',
                     $order->completed_at ? \Carbon\Carbon::parse($order->completed_at)->format('d/m/Y H:i') : '-',
                     $duration,
                     $order->resolution_note ?? '-'
@@ -358,8 +375,8 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'department' => 'required|in:FB Kitchen,Housekeeping,Front Office,DT,FB Service,P&C,Security,Sales,Acct,A&G',
-            'issue_type' => 'required|in:ELECTRICAL,MECHANICAL,PLUMBING,HVAC,BUILDING,FURNITURE,AV,SAFETY,OTHER',
+            'department' => 'required|exists:departments,name',
+            'issue_type' => 'required|exists:issue_types,name',
             'location' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|in:Pending,On Progress,Completed',
