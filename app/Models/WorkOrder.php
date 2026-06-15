@@ -41,7 +41,7 @@ class WorkOrder extends Model
 
             if (!$model->wo_number) {
                 $now = Carbon::parse($model->created_at);
-                $monthYear = $now->format('Ym');
+                $monthYear = $now->format('ym');
                 $startOfMonth = $now->copy()->startOfMonth();
                 $endOfMonth = $now->copy()->endOfMonth();
 
@@ -50,7 +50,7 @@ class WorkOrder extends Model
                     ->count();
 
                 // Generate wo_number: YYYYMM followed by sequence (001, 002, etc.)
-                $sequence = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+                $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
                 $model->wo_number = $monthYear . $sequence;
             }
         });
