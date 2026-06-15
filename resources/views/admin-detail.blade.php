@@ -76,6 +76,12 @@
                         <strong>Report Time</strong>
                         <p>{{ date('d/m/Y H:i', strtotime($order->created_at)) }}</p>
                     </div>
+                    @if($order->started_at)
+                    <div>
+                        <strong>Start Time</strong>
+                        <p>{{ date('d/m/Y H:i', strtotime($order->started_at)) }}</p>
+                    </div>
+                    @endif
                     @if($order->completed_at)
                     <div>
                         <strong>Completion Time</strong>
@@ -91,14 +97,22 @@
 
                 @if($order->status === 'Completed' && $order->completed_at)
                 @php
-                    $start = \Carbon\Carbon::parse($order->created_at);
-                    $end = \Carbon\Carbon::parse($order->completed_at);
-                    $duration = $start->diff($end)->format('%d Hari, %h Jam, %i Menit');
-                    
-                    // Gunakan duration_minutes dari database jika ada, atau hitung dari waktu
-                    $durationDisplay = $order->duration_minutes 
-                        ? round($order->duration_minutes / 60, 1) . ' Jam'
-                        : $duration;
+                    // Gunakan duration_minutes dari database (sudah dihitung dari started_at ke completed_at)
+                    if ($order->duration_minutes !== null) {
+                        $totalMenit = (int) $order->duration_minutes;
+                    } else {
+                        // Fallback: hitung dari started_at (atau created_at jika started_at null)
+                        $startTime = $order->started_at ?? $order->created_at;
+                        $totalMenit = (int) \Carbon\Carbon::parse($startTime)->diffInMinutes($order->completed_at);
+                    }
+
+                    if ($totalMenit >= 1440) {
+                        $durationDisplay = round($totalMenit / 1440, 1) . ' Hari';
+                    } elseif ($totalMenit >= 60) {
+                        $durationDisplay = round($totalMenit / 60, 1) . ' Jam';
+                    } else {
+                        $durationDisplay = $totalMenit . ' Menit';
+                    }
                 @endphp
                 <div style="margin-top: 1.5rem; background: #ecfdf5; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #10b981;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
